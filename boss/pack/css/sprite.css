@@ -1,0 +1,139 @@
+.sprite-page1-bird1 {
+  background: url(../images/sprite-page1.png) no-repeat -8.48rem -9.88rem;
+  background-size: 10.000000rem 27.333333rem;
+  width: 0.546667rem;
+  height: 0.360000rem;
+}
+
+.sprite-page1-btn-restart {
+  background: url(../images/sprite-page1.png) no-repeat -1.41333rem -9.88rem;
+  background-size: 10.000000rem 27.333333rem;
+  width: 3.400000rem;
+  height: 0.880000rem;
+}
+
+.sprite-page1-btn-share {
+  background: url(../images/sprite-page1.png) no-repeat -4.94667rem -9.88rem;
+  background-size: 10.000000rem 27.333333rem;
+  width: 3.400000rem;
+  height: 0.880000rem;
+}
+
+.sprite-page1-building {
+  background: url(../images/sprite-page1.png) no-repeat 0 0;
+  background-size: 10.000000rem 27.333333rem;
+  width: 10.000000rem;
+  height: 9.746667rem;
+}
+
+.sprite-page1-choose-title {
+  background: url(../images/sprite-page1.png) no-repeat -1.41333rem -10.89333rem;
+  background-size: 10.000000rem 27.333333rem;
+  width: 5.906667rem;
+  height: 0.426667rem;
+}
+
+.sprite-page1-fd-person {
+  background: url(../images/sprite-page1.png) no-repeat -1.41333rem -11.45333rem;
+  background-size: 10.000000rem 27.333333rem;
+  width: 8.546667rem;
+  height: 0.253333rem;
+}
+
+.sprite-page1-flag-bar {
+  background: url(../images/sprite-page1.png) no-repeat 0 -9.88rem;
+  background-size: 10.000000rem 27.333333rem;
+  width: 1.280000rem;
+  height: 17.453333rem;
+}
+
+.sprite-page1-pos1 {
+  background: url(../images/sprite-page1.png) no-repeat -1.41333rem -11.84rem;
+  background-size: 10.000000rem 27.333333rem;
+  width: 0.880000rem;
+  height: 2.520000rem;
+}
+
+.sprite-page1-pos3 {
+  background: url(../images/sprite-page1.png) no-repeat -2.42667rem -11.84rem;
+  background-size: 10.000000rem 27.333333rem;
+  width: 0.880000rem;
+  height: 2.106667rem;
+}
+
+.sprite-page2-building {
+  background: url(../images/sprite-page2.png) no-repeat 0 0;
+  background-size: 28.506667rem 18.680000rem;
+  width: 10.000000rem;
+  height: 9.746667rem;
+}
+
+.sprite-page2-d {
+  background: url(../images/sprite-page2.png) no-repeat -19.48rem -15.38667rem;
+  background-size: 28.506667rem 18.680000rem;
+  width: 3.400000rem;
+  height: 0.880000rem;
+}
+
+.sprite-page2-m1 {
+  background: url(../images/sprite-page2.png) no-repeat -10.13333rem 0;
+  background-size: 28.506667rem 18.680000rem;
+  width: 9.213333rem;
+  height: 8.800000rem;
+}
+
+.sprite-page2-m2 {
+  background: url(../images/sprite-page2.png) no-repeat 0 -9.88rem;
+  background-size: 28.506667rem 18.680000rem;
+  width: 9.213333rem;
+  height: 8.800000rem;
+}
+
+.sprite-page2-m3 {
+  background: url(../images/sprite-page2.png) no-repeat -9.34667rem -9.88rem;
+  background-size: 28.506667rem 18.680000rem;
+  width: 8.786667rem;
+  height: 8.786667rem;
+}
+
+.sprite-page2-m4 {
+  background: url(../images/sprite-page2.png) no-repeat -19.48rem 0;
+  background-size: 28.506667rem 18.680000rem;
+  width: 9.026667rem;
+  height: 8.480000rem;
+}
+
+.sprite-page2-op-tip {
+  background: url(../images/sprite-page2.png) no-repeat -19.48rem -8.61333rem;
+  background-size: 28.506667rem 18.680000rem;
+  width: 7.226667rem;
+  height: 6.640000rem;
+}
+
+.sprite-page2-pos1 {
+  background: url(../images/sprite-page2.png) no-repeat -26.84rem -11.82667rem;
+  background-size: 28.506667rem 18.680000rem;
+  width: 0.880000rem;
+  height: 2.520000rem;
+}
+
+.sprite-page2-pos2 {
+  background: url(../images/sprite-page2.png) no-repeat -19.48rem -16.4rem;
+  background-size: 28.506667rem 18.680000rem;
+  width: 0.880000rem;
+  height: 2.106667rem;
+}
+
+.sprite-page2-pos3 {
+  background: url(../images/sprite-page2.png) no-repeat -20.49333rem -16.4rem;
+  background-size: 28.506667rem 18.680000rem;
+  width: 0.880000rem;
+  height: 2.106667rem;
+}
+
+.sprite-page2-pos4 {
+  background: url(../images/sprite-page2.png) no-repeat -26.84rem -8.61333rem;
+  background-size: 28.506667rem 18.680000rem;
+  width: 0.880000rem;
+  height: 3.080000rem;
+}

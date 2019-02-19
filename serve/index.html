@@ -1,0 +1,179 @@
+<html>
+<head>
+  <title>我的服务器</title>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+  <style>
+    .buttom {
+      width: 90%;
+      margin: 0 5%;
+      position: absolute;
+      bottom: 10px;
+      color: white;
+      line-height: 40px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: center;
+      background-color: #009fe9;
+    }
+    .round-button {
+      background-color: skyblue;
+      color: white;
+      height: 100px;
+      width: 100px;
+      text-align: center;
+      line-height: 100px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+    }
+    .round-button:active {
+      transform: scale(0.9)
+    }
+  </style>
+  <link rel="stylesheet" href="//res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+  <div id="app" class="page__bd">
+    <!-- 设置页面 -->
+    <div v-if="showConfigPage" class="config">
+      <div class="weui-cells__title">AccessKey ID</div>
+      <div class="weui-cells">
+          <div class="weui-cell">
+              <div class="weui-cell__bd">
+                  <input v-model="accessKey" class="weui-input" type="text" placeholder="请输入文本">
+              </div>
+          </div>
+      </div>
+      <div class="weui-cells__title">Access Key Secret</div>
+      <div class="weui-cells">
+          <div class="weui-cell">
+              <div class="weui-cell__bd">
+                  <input v-model="secret" class="weui-input" type="text" placeholder="请输入文本">
+              </div>
+          </div>
+      </div>
+      <div class="buttom" @click="saveConfug">确认</div>
+    </div>
+    <div v-else class="control">
+      <template v-if="instanceList">
+        <div class="weui-cells__title">服务器列表</div>
+        <div class="weui-cells">
+          <div class="weui-cell weui-cell_select">
+            <div class="weui-cell__bd">
+              <select class="weui-select" name="select1">
+                <option v-for="item in instanceList" value="item.InstanceId" >{{item.InstanceName}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="weui-cells__title">控制开关</div>
+        <div class="weui-cells weui-cells_form">
+          <div class="weui-cell weui-cell_switch">
+            <div class="weui-cell__bd">开启服务器</div>
+            <div class="weui-cell__ft">
+              <input :checked="instanceList[0].Status === 'Running'" @change="switchServerStatus(instanceList[0].Status)" class="weui-switch" type="checkbox">
+            </div>
+          </div>
+        </div>
+        <div class="weui-cells__title">配置信息</div>
+        <div class="weui-cells">
+          <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>CPU数量</p>
+            </div>
+            <div class="weui-cell__ft">{{instanceList[0].Cpu}} 核心</div>
+          </div>
+          <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>内存大小</p>
+            </div>
+            <div class="weui-cell__ft">{{instanceList[0].Memory}} Mb</div>
+          </div>
+          <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>操作系统</p>
+            </div>
+            <div class="weui-cell__ft">{{instanceList[0].OSName}}</div>
+          </div>
+          <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>带宽大小</p>
+            </div>
+            <div class="weui-cell__ft">{{instanceList[0].EipAddress.Bandwidth}} Mb</div>
+          </div>
+          <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>IP地址</p>
+            </div>
+            <div class="weui-cell__ft">{{instanceList[0].EipAddress.IpAddress}}</div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <script>
+    let app = new Vue({
+      el: '#app',
+      data: {
+        InstanceId: '',
+        accessKey: '',
+        secret: '',
+        showConfigPage: true,
+        instanceList: null
+      },
+      methods: {
+        saveConfug () {
+          this.showConfigPage = false
+          const saveData = JSON.stringify({
+            accessKey: this.accessKey,
+            secret: this.secret
+          })
+          $get(`http://xn--9tr.com:5000/info/${this.accessKey}/${this.secret}`, (res) => {
+            this.instanceList = res.Instances.Instance
+          })
+          localStorage.ECSconfig = saveData
+        },
+        switchServerStatus (status) {
+          console.log('开关服务器', status)
+          // return
+          if (status === 'Stopped') {
+            // 开启服务器
+            $get(`http://xn--9tr.com:5000/start/${this.accessKey}/${this.secret}/${this.InstanceId}`)
+          } else {
+            // 关闭服务器
+            $get(`http://xn--9tr.com:5000/stop/${this.accessKey}/${this.secret}/${this.InstanceId}`)
+          }
+        }
+      },
+      mounted () {
+        let config = localStorage.ECSconfig
+        if (!config) return
+        config = JSON.parse(config)
+        console.log(config)
+        // 判断配置是否存在
+        if (config.accessKey && config.secret) {
+          this.accessKey = config.accessKey
+          this.secret = config.secret
+          $get(`http://xn--9tr.com:5000/info/${config.accessKey}/${config.secret}`, (res) => {
+            this.instanceList = res.Instances.Instance
+          })
+          this.showConfigPage = false
+        }
+        else return
+      }
+    })
+    function $get (url, fn){
+      const obj = new XMLHttpRequest()        
+      obj.open('GET', url, true)
+      obj.onreadystatechange = function(){
+        if (obj.readyState === 4 && obj.status === 200 || obj.status === 304) {
+          if (fn) fn.call(this, JSON.parse(obj.responseText))
+        }
+      }
+      obj.send(null)
+    }
+  </script>
+</body>
+</html>

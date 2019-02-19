@@ -1,0 +1,73 @@
+<html>
+<head>
+  <title>我的服务器</title>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+  <style>
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    .page__bd {
+      width: 100%;
+      height: 100%;
+    }
+    .bottom-bar {
+      width: 100%;
+      position: fixed;
+      bottom: 0;
+    }
+  </style>
+  <link rel="stylesheet" href="//res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+  <div id="app" class="page">
+    <pre class="log">{{log}}</pre>
+  </div>
+
+  <script>
+    // 因为服务器只有一个 微信除了80端口以外的页面会被区别对待 所以写成绝对路径
+    let app = new Vue({
+      el: '#app',
+      data: {
+        serverIndex: 0,
+        log: ''
+      },
+      methods: {
+        getQueryString (name) { 
+          var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i")
+          var r = window.location.search.substr(1).match(reg)
+          if (r != null) return unescape(r[2])
+          return null
+        }
+      },
+      created () {
+        let config = localStorage.visor
+        if (config) {
+          config = JSON.parse(config)
+          const newServer = config[this.serverIndex]
+          console.log(newServer)
+          $get(`http://xn--9tr.com:5001/readProcessStdoutLog/${newServer.ip}/${newServer.port}/${newServer.username}/${newServer.password}/${this.getQueryString('name')}/0/0`, (res) => {
+            console.log(res)
+            this.log = res
+          })
+        } else {
+          window.location.href = '/visor'
+        }
+      }
+    })
+    function $get (url, fn){
+      const obj = new XMLHttpRequest()        
+      obj.open('GET', url, true)
+      obj.onreadystatechange = function(){
+        if (obj.readyState === 4 && obj.status === 200 || obj.status === 304) {
+          if (fn) fn.call(this, JSON.parse(obj.responseText))
+        }
+      }
+      obj.send(null)
+    }
+  </script>
+</body>
+</html>
