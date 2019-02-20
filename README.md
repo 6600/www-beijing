@@ -1,2 +1,2 @@
 # www-beijing
-webhook测试1
+webhook测试2
