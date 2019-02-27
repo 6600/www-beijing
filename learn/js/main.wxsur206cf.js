@@ -320,7 +320,7 @@ var globalConfig = {
     "content": "text/html; charset=UTF-8"
   }, {
     "name": "viewport",
-    "content": "initial-scale=1,user-scalable=no,maximum-scale=1"
+    "content": "initial-scale=1,user-scalable=no,maximum-scale=1,,user-scalable=no"
   }],
   "scriptList": [{
     "name": "jquery-3.3.1",
@@ -338,6 +338,9 @@ var globalConfig = {
   }, {
     "name": "html2canvas",
     "src": "./src/html2canvas.min.js"
+  }, {
+    "name": "log",
+    "src": "http://people.com.cn/img/MAIN/2018/10/118767/js/lib/vconsole.3.3.bundle.min.js"
   }],
   "styleList": [{
     "name": "component",
@@ -366,12 +369,15 @@ window.ozzx.script = {
       "control": null,
       "ElastiStack": null,
       "activeDateIndex": 0,
-      "readList": []
+      "readList": [],
+      "isPC": true
     },
     "created": function created() {
       var _this = this;
 
-      // 读取出打卡记录
+      // 解决返回上一页不会退回到学习页面
+      this.closeHistory(); // 读取出打卡记录
+
       var readList = localStorage.getItem("readList");
 
       if (readList) {
@@ -380,13 +386,17 @@ window.ozzx.script = {
 
       document.addEventListener('touchmove', function (e) {
         e.preventDefault();
-      }, false); // 计算并设置dataBox宽度
+      }, false); // 检查是电脑还是移动端
 
-      this.domList.dataBox.style.width = dateList.length * 76 - 20 + 'px'; // console.log(Object.keys(dateList).length)
-      // 计算打卡页面
-      // 判断是手机页面还是电脑页面
+      this.checkIsPC(); // 计算并设置dataBox宽度 or 高度
 
-      this.data.screenInfo = ozzx.tool.getScreenInfo(); // 生成dom
+      if (this.data.isPC) {
+        console.log('pc');
+        this.domList.dataBox.style.width = dateList.length * 76 - 20 + 'px';
+      } else {
+        this.domList.dataBox.style.height = dateList.length * 76 - 20 + 'px';
+      } // 生成dom
+
 
       var dataBoxTemple = '';
       var historyTemple = '';
@@ -410,7 +420,11 @@ window.ozzx.script = {
       this.domList.cardBox.innerHTML = historyTemple + '<div class="clear"></div>'; // 延时设置打卡页面元素dom
 
       setTimeout(function () {
-        _this.domList.cardBox.style.width = 41 * (_this.domList.cardBox.childNodes.length - 1) + 'px';
+        if (_this.data.isPC) {
+          _this.domList.cardBox.style.width = 41 * (_this.domList.cardBox.childNodes.length - 1) + 'px';
+        } else {
+          _this.domList.cardBox.style.height = 41 * (_this.domList.cardBox.childNodes.length - 1) + 'px';
+        }
       }, 1000); // 刷新dom节点
 
       pgNameHandler(document.getElementById('dataBox')); // this.calculation()
@@ -419,6 +433,19 @@ window.ozzx.script = {
       setTimeout(function () {
         document.getElementById('dataBox').children[0].classList.add('active');
       }, 0);
+    },
+    "checkIsPC": function checkIsPC() {
+      // 判断是手机页面还是电脑页面
+      this.data.screenInfo = ozzx.tool.getScreenInfo();
+      console.log(this.data.screenInfo); // 先计算宽高比是否大于1
+
+      if (this.data.screenInfo.ratio > 1) {
+        document.body.classList.add('pc');
+        this.data.isPC = true;
+      } else {
+        document.body.classList.add('h5');
+        this.data.isPC = false;
+      }
     },
     "changeCard": function changeCard(cardList) {
       var domTemple = '';
@@ -433,12 +460,12 @@ window.ozzx.script = {
         if (++ind === 1) {
           // 判断是否有image
           if (element.img) {
-            domTemple += "<li id=\"slideItem".concat(ind, "\"><div class=\"note-left\"></div><div class=\"title\">").concat(element.title, "</div><div class=\"image-box\"><img src=\"").concat(element.img, "\"/></div><div class=\"content\">").concat(element.content, "</div>");
+            domTemple += "<li id=\"slideItem".concat(ind, "\"><div class=\"handle\"></div><div class=\"note-left\"></div><div class=\"title\">").concat(element.title, "</div><div class=\"image-box\"><img src=\"").concat(element.img, "\"/></div><div class=\"content mini\">").concat(element.content, "</div>");
           } else {
-            domTemple += "<li id=\"slideItem".concat(ind, "\"><div class=\"note-left\"></div><div class=\"title\">").concat(element.title, "</div><div class=\"content\">").concat(element.content, "</div>");
+            domTemple += "<li id=\"slideItem".concat(ind, "\"><div class=\"handle\"></div><div class=\"note-left\"></div><div class=\"title\">").concat(element.title, "</div><div class=\"content\">").concat(element.content, "</div>");
           }
         } else {
-          domTemple += "<li id=\"slideItem".concat(ind, "\"><div class=\"content-left\"><div class=\"num\">").concat(ind, "</div></div><div class=\"title\">").concat(element.title, "</div><div class=\"content\">").concat(element.content, "</div>");
+          domTemple += "<li id=\"slideItem".concat(ind, "\"><div class=\"handle\"></div><div class=\"content-left\"><div class=\"num\">").concat(ind, "</div></div><div class=\"title\">").concat(element.title, "</div><div class=\"content\">").concat(element.content, "</div>");
         }
 
         if (element.music) {
@@ -485,6 +512,7 @@ window.ozzx.script = {
         // console.log(this.data.screenInfo.clientHeight)
         _this2.data.ElastiStack = new ElastiStack(document.getElementById('elasticstack'), {
           loop: false,
+          handle: ".handle",
           ratioX: parseInt(_this2.data.screenInfo.clientWidth * 0.02),
           ratioZ: parseInt(_this2.data.screenInfo.clientWidth * -0.02),
           distDragBack: 100,
@@ -492,21 +520,24 @@ window.ozzx.script = {
           onUpdateStack: function onUpdateStack(activeIndex) {
             // 如果阅读了就标记这一页为已阅读
             _this2.saveReadInfo(); // console.log(activeIndex)
-            // 第一页的时候隐藏左箭头
+            // 只有PC才有左右箭头
 
 
-            if (activeIndex === 0) {
-              // console.log(this.data.ElastiStack.itemsCount - 1)
-              _this2.domList.last.style.display = 'none';
-            } else {
-              _this2.domList.last.style.display = 'block';
-            } // 最后一页的时候没有向右箭头
+            if (_this2.data.isPC) {
+              // 第一页的时候隐藏左箭头
+              if (activeIndex === 0) {
+                // console.log(this.data.ElastiStack.itemsCount - 1)
+                _this2.domList.last.style.display = 'none';
+              } else {
+                _this2.domList.last.style.display = 'block';
+              } // 最后一页的时候没有向右箭头
 
 
-            if (activeIndex === _this2.data.ElastiStack.itemsCount - 1) {
-              _this2.domList.next.style.display = 'none';
-            } else {
-              _this2.domList.next.style.display = 'block';
+              if (activeIndex === _this2.data.ElastiStack.itemsCount - 1) {
+                _this2.domList.next.style.display = 'none';
+              } else {
+                _this2.domList.next.style.display = 'block';
+              }
             } // 有记者按的关系需要加1
 
 
@@ -577,20 +608,41 @@ window.ozzx.script = {
       this.domList.cardBox.innerHTML = historyTemple + '<div class="clear"></div>';
       this.domList.history.style.display = 'block';
       this.domList.showBox.style.display = 'none';
+      this.domList.dataBox.style.display = 'none';
+      this.domList.record.style.display = 'none';
     },
     "closeHistory": function closeHistory() {
       this.domList.history.style.display = 'none';
       this.domList.showBox.style.display = 'block';
+      this.domList.dataBox.style.display = 'block';
+      this.domList.record.style.display = 'block';
     }
   },
   "copyright": {},
   "share": {
     "created": function created() {
-      console.log('sd'); // 将dom导出为图片
+      var _this3 = this;
 
-      html2canvas(document.getElementById('cardList')).then(function (canvas) {
-        shareImg.src = canvas.toDataURL();
-      });
+      // console.log(this.domList)
+      // 获取到屏幕信息
+      var screenInfo = ozzx.tool.getScreenInfo(); // console.log(screenInfo)
+      // this.domList.learnInfo.style.width = '20%'
+      // this.domList.learnInfo.style.height = 20 * screenInfo.ratio + '%'
+      // console.log(this.domList.number.style)
+      // this.domList.number.style.lineHight = screenInfo.clientWidth * 0.2 + 'px'
+      // 避免阻塞
+
+      setTimeout(function () {
+        // 将dom导出为图片
+        html2canvas(_this3.domList.share, {
+          scale: 2,
+          async: false
+        }).then(function (canvas) {
+          console.log(canvas);
+          _this3.domList.shareImg.src = canvas.toDataURL();
+          _this3.domList.shareImg.style.display = 'block'; // document.body.appendChild(canvas)
+        });
+      }, 1000);
     }
   }
 };
