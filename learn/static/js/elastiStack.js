@@ -58,6 +58,8 @@
 
 
   ElastiStack.prototype.options = {
+    // 是否启用卡片拖拽
+    enable: true,
     // 弹回距离
     distDragBack: 200,
     // 被移出距离
@@ -72,6 +74,12 @@
     handle: undefined,
     // 切换卡片事件
     onUpdateStack: function onUpdateStack(current) {
+      return false;
+    },
+    atStart: function atStart() {
+      return false;
+    },
+    atEnd: function atEnd() {
       return false;
     }
   }; // 初始化设置
@@ -104,7 +112,9 @@
   ElastiStack.prototype._initEvents = function () {
     var _this = this;
 
+    if (!this.options.enable) return;
     this.draggie.on('dragStart', function (i, e, p) {
+      // 判断是否启用
       _this._onDragStart(i, e, p);
     });
     this.draggie.on('dragEnd', function (i, e, p) {
@@ -132,13 +142,14 @@
   };
 
   ElastiStack.prototype._moveAway = function (instance) {
-    console.log(instance); // 判断是否有下一个卡片
-
+    // console.log(instance)
+    // 判断是否有下一个卡片
     var next = this.items[this.current + 1];
 
     if (!this.options.loop && !next) {
       this._moveBack(instance);
 
+      this.options.atEnd();
       return;
     } // disable drag
 
@@ -162,22 +173,22 @@
 
       setTransformStyle(instance.element, is3d ? 'translate3d(' + self.options.ratioX * 2 + ', 0, ' + self.options.ratioZ * 2 + 'px)' : 'translate(0,0,0)');
       instance.element.style.left = instance.element.style.top = '0px';
-      instance.element.style.zIndex = -1; // 从下往上切换可以直接放置到最后
+      instance.element.style.zIndex = -1; // 待测试
 
-      classie.remove(instance.element, 'animate'); // 前进
+      if (!self.options.loop) {
+        // console.log('移动结束')
+        instance.element.style.display = 'none';
+      } // 前进
+
 
       self.current++; // reorder stack
       // 循环
 
       if (self.current < 0) self.current = self.itemsCount - 1;
-      if (self.current > self.itemsCount - 1) self.current = 0;
-      setTimeout(function () {
-        // the upcoming one will animate..
-        var item = self.items[self.current >= self.items.length ? self.current % self.items.length : self.current];
-        classie.add(item, 'animate'); // reset style
+      if (self.current > self.itemsCount - 1) self.current = 0; // 回归
 
-        self._setStackStyle();
-      }, 25); // add dragging capability
+      self._setStackStyle(); // add dragging capability
+
 
       self._initDragg(); // init drag events on new current item
 
@@ -208,51 +219,54 @@
   };
 
   ElastiStack.prototype._goBack = function (instance, event, pointer) {
-    var last = this.items[this.current - 1]; // console.log(last)
-    // 待优化
+    var _this2 = this;
+
+    var last = this.items[this.current - 1];
+
+    if (!last) {
+      // 没有上一项的回调
+      this.options.atStart();
+      return;
+    }
+
+    last.style.display = 'block'; // last.style.zIndex = 5;
     // 判断是否允许循环
 
-    if (this.options.loop && !last) last = this.items[this.items.length - 1]; // 待优化
-
-    if (last) {
+    if (this.options.loop && !last) last = this.items[this.items.length - 1];
+    setTimeout(function () {
       // 禁止拖动
-      this._disableDragg();
+      _this2._disableDragg();
 
-      last.style.opacity = 0; // 添加动画标签
+      last.style.opacity = 0;
+      setTimeout(function () {
+        last.style.zIndex = 5;
+      }, 100); // 添加动画标签
 
-      last.style.zIndex = 5;
       classie.add(last, 'animate');
 
-      var tVal = this._getTranslateVal(instance); // apply it	
+      var tVal = _this2._getTranslateVal(instance); // apply it	
 
 
       setTransformStyle(last, is3d ? 'translate3d(' + tVal.x + 'px,' + tVal.y + 'px, 0px)' : 'translate(' + tVal.x + 'px,' + tVal.y + 'px)'); // after transition ends..
 
-      var self = this,
+      var self = _this2,
           // 动画结束事件
       onEndTransFn = function onEndTransFn() {
+        // 开始进入回来状态
         last.removeEventListener(transEndEventName, onEndTransFn); // reset first item
+        // setTransformStyle( last, is3d ? 'translate3d(0, 0, 0)' : 'translate(0, 0)' );
+        // last.style.left = last.style.top = '0px';
 
-        setTransformStyle(last, is3d ? 'translate3d(0, 0, 0)' : 'translate(0,0)');
-        last.style.left = last.style.top = '0px';
-        last.style.zIndex = 4;
-        last.style.opacity = 1;
-        setTimeout(function () {
-          classie.remove(last, 'animate');
-        }, 300); // 前进
+        last.style.opacity = 1; // 前进
 
         self.current--; // reorder stack
         // 循环
 
         if (self.current < 0) self.current = self.itemsCount - 1;
         if (self.current > self.itemsCount - 1) self.current = 0;
-        setTimeout(function () {
-          // the upcoming one will animate..
-          var item = self.items[self.current >= self.items.length ? self.current % self.items.length : self.current];
-          classie.add(item, 'animate'); // reset style
 
-          self._setStackStyle();
-        }, 25); // add dragging capability
+        self._setStackStyle(); // add dragging capability
+
 
         self._initDragg(); // init drag events on new current item
 
@@ -268,7 +282,7 @@
       } else {
         onEndTransFn.call();
       }
-    }
+    }, 0);
   };
 
   ElastiStack.prototype._onDragEnd = function (instance, event, pointer) {
@@ -288,16 +302,19 @@
   };
 
   ElastiStack.prototype._initDragg = function () {
-    console.log(this.items[this.current]);
-    this.draggie = new Draggabilly(this.items[this.current], {
-      // 限制在父容器中移动
-      // containment: true,
-      axis: this.options.axis,
-      handle: this.options.handle
-    });
+    // console.log(this.items[ this.current ])
+    if (this.options.enable) {
+      this.draggie = new Draggabilly(this.items[this.current], {
+        // 限制在父容器中移动
+        // containment: true,
+        axis: this.options.axis,
+        handle: this.options.handle
+      });
+    }
   };
 
   ElastiStack.prototype._disableDragg = function () {
+    if (!this.options.enable) return;
     this.draggie.disable();
   }; // returns true if x or y is bigger than distDragBack
 
@@ -319,8 +336,6 @@
       y: el.position.y > 0 ? ty : ty * -1
     };
   };
-
-  ElastiStack.prototype.next = function () {};
 
   ElastiStack.prototype.add = function (el) {
     this.container.appendChild(el);
@@ -398,6 +413,22 @@
       isEnabled: false,
       position: {
         x: -260,
+        y: 0
+      }
+    });
+  };
+
+  ElastiStack.prototype.jump = function (index) {
+    this._moveAway({
+      dragPoint: {
+        x: 260,
+        y: 0
+      },
+      element: this.items[index],
+      isDragging: false,
+      isEnabled: false,
+      position: {
+        x: 260,
         y: 0
       }
     });

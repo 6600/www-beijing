@@ -6,16 +6,34 @@ html, body, .ox, .app {
   overflow: hidden;
   background-repeat: no-repeat;
   background-size: 100% 100%;
+  font-family: "Microsoft YaHei";
 }
 /* 去掉点击背景色 */
 * {
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 }
 
+.toast {
+  position: fixed;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.5);
+  bottom: 10%;
+  width: 40%;
+  height: 40px;
+  border-radius: 10px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  line-height: 40px;
+  text-align: center;
+  color: white;
+}
+
+
 /* pc页面样式 */
 .pc {
-  min-width: 1080px;
-  min-height: 720px;
+  min-width: 800px;
+  min-height: 600px;
   background-image: url("../images/bg.jpg");
 }
 .pc .show-box {
@@ -24,16 +42,35 @@ html, body, .ox, .app {
 .pc .history {
   min-width: 780px;
 }
-
+.pc .content-left-button {
+  display: none;
+}
+.pc .ox-card .elasticstack .content p {
+  -webkit-user-select: unset;
+     -moz-user-select: unset;
+      -ms-user-select: unset;
+          user-select: unset;
+}
 /* 手机页面 */
 .h5 {
   background-image: url("../images/h5-bg.jpg");
+  background-size: 100%;
+  background-color: #e9e3d7;
+  overflow: hidden;
+}
+
+.h5 .app {
+  overflow: hidden;
 }
 
 .h5 .page-header {
   display: none;
 }
 .h5 .ox-copyright {
+  display: none;
+}
+
+.h5 .show-box {
   display: none;
 }
 
@@ -45,6 +82,20 @@ html, body, .ox, .app {
   right: 0;
   bottom: 0;
   margin: auto;
+}
+
+.h5 .ox-share .learn-info {
+  width: 20vw;
+  height: 20vw;
+}
+
+.h5 .ox-share .learn-info .num {
+  line-height: 50px;
+  font-size: 50px;
+}
+
+.h5 .ox-share .learn-info .text {
+  right: 2vw;
 }
 
 .h5 .ox-card .elasticstack {
@@ -77,17 +128,17 @@ html, body, .ox, .app {
 
 .h5 .ox-card .elasticstack .content-left .num {
   font-size: 18px;
-  left: 31px;
+  left: 19px;
   top: 14px;
 }
 
 .h5 .ox-card .elasticstack .content {
-  height: calc(100% - 130px);
-  margin: 10px 5px;
+  max-height: calc(100% - 130px);
+  margin: 10px;
 }
 
 .h5 .ox-card .elasticstack .mini {
-  height: calc(100% - 240px);
+  height: calc(100% - 275px);
 }
 
 .h5 .ox-card .elasticstack .title {
@@ -95,17 +146,18 @@ html, body, .ox, .app {
   top: 0;
   left: 0;
   text-align: center;
-  width: 100%;
+  width: 90%;
+  margin: 0 auto;
 }
 .h5 .ox-card .next, .h5 .ox-card .last {
   display: none;
 }
 .h5 .ox-card .record {
-  bottom: calc(10% - 40px);
+  bottom: calc(9% - 40px);
   top: unset;
   right: 10%;
-  width: 80px;
-  height: 28px;
+  width: 101px;
+  height: 35px;
 }
 
 .h5 .ox-card .elasticstack .image-box {
@@ -125,11 +177,29 @@ html, body, .ox, .app {
   width: 50px;
   left: calc(10% - 21px);
   right: unset;
-  top: 28%;
+  top: 0;
+  bottom: 0;
 }
+
+.h5 .ox-card .audio-box .audio-bar {
+  width: calc(100% - 45px);
+}
+
+.h5 .ox-card .main {
+  top: 0;
+}
+
+.pc .ox-card .main {
+  top: -100%;
+}
+
 
 .h5 .ox-card .date-box .date-item {
   float: none;
+  margin: 5px 11px;
+}
+.h5 .ox-card .date-box .active {
+  margin: 5px;
 }
 
 .h5 .ox-card .date-box .middle-line {
@@ -153,7 +223,7 @@ html, body, .ox, .app {
 }
 
 .h5 .ox-card .history .right {
-  height: 30%;
+  height: 25%;
   width: 100%;
   padding: 0;
   background-color: white;
@@ -165,7 +235,7 @@ html, body, .ox, .app {
 .h5 .ox-card .history .left  {
   float: none;
   width: 100%;
-  height: 70%;
+  height: 75%;
 }
 .h5 .ox-card .history .left .history-left-card-box .item {
   float: none;
@@ -184,9 +254,13 @@ html, body, .ox, .app {
 }
 .h5 .ox-card .history .left .history-left-card-box .item .text {
   padding: 0;
-  width: calc(100% - 80px);
+  width: calc(100% - 90px);
   height: 40px;
   line-height: 40px;
+  color: #f3d9ac;
+  text-align: left;
+  padding: 0 5px;
+  letter-spacing: 2px;
 }
 
 .h5 .ox-card .history .left .history-left-card-box .item .icon-box {
@@ -245,6 +319,42 @@ p {
   border-radius: 10px;
   background: #EDEDED;
 }
+
+/* 媒体查询 */
+
+@media screen and (max-height: 720px) {
+  .pc .ox-copyright {
+    display: none;
+  }
+  .pc .ox-card .date-box, .pc .ox-card .record{
+    top: unset;
+    bottom: 5%;
+    right: 20px;
+  }
+  .pc .ox-card .elasticstack {
+    top: 20%;
+  }
+}
+
+@media screen and (max-height: 780px) {
+  .pc .ox-copyright .copyright-box {
+    height: 100px;
+  }
+  .pc .ox-card .date-box, .pc .ox-card .record{
+    top: 77%;
+  }
+}
+
+@media screen and (max-height: 690px) {
+  .pc .ox-copyright .copyright-box {
+    height: 100px;
+  }
+  .pc .ox-card .date-box, .pc .ox-card .record{
+    bottom: 0;
+    top: unset;
+    margin: 10px auto;
+  }
+}
 .ox-copyright .copyright-box {
   height: 170px;
   color: #727272;
@@ -263,7 +373,30 @@ p {
   top: 0;
   bottom: 0;
   margin: auto;
-}.ox-card .elasticstack {
+}.ox-card .main {
+  background-image: url(../images/h5-bg.jpg);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  position: fixed;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99;
+  transition: opacity 1.5s;
+  overflow: hidden;
+}
+
+.ox-card .main .text {
+  width: 80%;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+.ox-card .elasticstack {
   width: 80%;
   height: 401px;
   position: absolute;
@@ -278,8 +411,8 @@ p {
 .ox-card .elasticstack li {
   display: block;
   position: absolute;
-  width: 86%;
-  height: 230px;
+  width: 90%;
+  height: 270px;
   background-color: white;
   left: 0;
   top: 0;
@@ -288,7 +421,7 @@ p {
   margin: auto;
   -webkit-transform: translate3d(10px, 0px, -20px);
   transform: translate3d(10px, 0px, -20px);
-  border: 1px solid #ded0c3;
+  box-shadow: 2px 2px 5px #e6dada;
   border-radius: 10px;
   padding: 20px 10px;
   overflow: hidden;
@@ -316,11 +449,18 @@ p {
 .ox-card .elasticstack .content-left .num {
   position: absolute;
   color: white;
-  left: 49%;
+  left: 37%;
   top: 22%;
-  font-size: 30px;
+  font-size: 26px;
   height: 30px;
   line-height: 25px;
+  width: 33px;
+  text-align: center;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  pointer-events: none;
 }
 
 .ox-card .elasticstack .title {
@@ -328,18 +468,22 @@ p {
   font-weight: bold;
   position: absolute;
   width: 400px;
-  left: 15%;
-  top: 10%;
+  left: 100px;
+  top: 20px;
   font-size: 20px;
   z-index: -2;
+  height: 26px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .ox-card .elasticstack .image-box {
-  width: 30%;
+  width: 26%;
   float: left;
   position: relative;
   height: 100%;
-  margin: 0 2%;
+  margin-right: 2%;
   z-index: -2;
 }
 
@@ -366,7 +510,7 @@ p {
   font-size: 14px;
   margin: 0 10px;
   margin: 40px 10px;
-  height: 160px;
+  max-height: 200px;
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -383,7 +527,7 @@ p {
   width: 100%;
   position: absolute;
   bottom: 0;
-  height: 50px;
+  height: 40px;
   left: 0;
 }
 
@@ -393,7 +537,7 @@ p {
 }
 
 .ox-card .page-header {
-  height: 35%;
+  height: 37%;
   background-image: url(../images/header.png);
   background-repeat: no-repeat;
   background-position: center;
@@ -405,8 +549,10 @@ p {
   height: 40%;
   width: 70%;
   position: absolute;
-  left: 15%;
-  top: 30%;
+  top: 32%;
+  left: 0;
+  right: 0;
+  margin: auto;
 }
 
 .ox-card .date-box {
@@ -414,10 +560,10 @@ p {
   justify-content: center;
   position: absolute;
   width: 100%;
-  top: 70%;
+  top: 74%;
   left: 0;
   right: 0;
-  margin: 0 auto;
+  margin: auto;
 }
 
 .ox-card .date-item {
@@ -434,6 +580,7 @@ p {
   cursor: pointer;
   transition: all 0.3s;
   float: left;
+  overflow: hidden;
 }
 
 .ox-card .active {
@@ -447,8 +594,8 @@ p {
 
 .ox-card .record {
   position: absolute;
-  right: 20%;
-  top: 71%;
+  right: 16%;
+  top: 75%;
   width: 101px;
   height: 35px;
   cursor: pointer;
@@ -466,9 +613,11 @@ p {
   background-size: 100% 100%;
   background-image: url(../images/right.png);
   position: absolute;
-  right: 10px;
-  top: calc(50% - 22px);
+  right: 0px;
+  top: 0;
   cursor: pointer;
+  bottom: 0;
+  margin: auto;
 }
 
 .ox-card .last {
@@ -479,7 +628,7 @@ p {
   background-image: url(../images/left.png);
   position: absolute;
   left: 10px;
-  top: calc(50% - 22px);
+  top: 179px;
   cursor: pointer;
   display: none;
 }
@@ -496,10 +645,12 @@ p {
   overflow: hidden;
   display: none;
   margin: auto;
+  box-shadow: 2px 2px 5px #e6dada;
 }
 
 .ox-card .history .history-item {
   height: 100%;
+  overflow: auto;
 }
 
 .ox-card .history .left {
@@ -517,6 +668,8 @@ p {
   top: 0;
   margin: auto;
   bottom: 0;
+  max-height: 300px;
+  overflow: auto;
 }
 
 .ox-card .history .left .history-left-card-box .item {
@@ -529,6 +682,11 @@ p {
 
 .ox-card .history .left .history-left-card-box .isread {
   color: #f4cda4;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  pointer-events: none;
 }
 
 .ox-card .history .left .history-left-card-box .isread .icon-box {
@@ -540,6 +698,7 @@ p {
   line-height: 40px;
   text-align: center;
   font-size: 22px;
+  overflow: hidden;
 }
 
 .ox-card .history .left .history-left-card-box .text {
@@ -549,6 +708,7 @@ p {
   font-size: 14px;
   word-wrap: break-word;
   padding: 0 10px;
+  overflow: hidden;
 }
 
 .ox-card .history .left .history-left-card-box .icon-box {
@@ -558,7 +718,7 @@ p {
   background-image: url(../images/calendar.png);
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 22px;
+  background-size: 18px;
 }
 
 .ox-card .history .right {
@@ -617,8 +777,8 @@ p {
 
 .ox-card .next-box {
   display: none;
-  height: 30px;
-  line-height: 30px;
+  height: 35px;
+  line-height: 35px;
   position: absolute;
   bottom: 20%;
   width: 100%;
@@ -629,24 +789,131 @@ p {
   background-color: red;
   text-align: center;
   color: white;
-  width: 100px;
+  width: 40%;
   border-radius: 20px;
   font-size: 14px;
 }
 
 .ox-card .next-box .next-box-button a {
   color: white;
+}
+
+.ox-card .audio-box {
+  position: absolute;
+  height: 35px;
+  bottom: 10px;
+  left: 0;
+  width: 80%;
+  right: 0;
+  margin: auto;
+}
+
+.ox-card .audio-box .audio-image {
+  background-image: url(../images/audio.png);
+  float: left;
+  width: 35px;
+  height: 35px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 27px !important;
+  cursor: pointer;
+}
+
+.ox-card .audio-box .audio-bar {
+  float: right;
+  width: 90%;
+  height: 17px;
+  position: relative;
+  border-bottom: 1px solid #ccc;
+}
+
+.ox-card .audio-box .spot {
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  position: absolute;
+  top: 12px;
+  border-radius: 50%;
+  left: 0;
+  position: relative;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  pointer-events: none;
+}
+
+.ox-card .audio-box .progress {
+  position: absolute;
+  top: 17px;
+  left: 0;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  pointer-events: none;
+  border-bottom: 1px solid red;
+}
+
+.ox-card .alert {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.ox-card .alert .text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  color: white;
+  width: 12em;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  font-size: 1.6rem;
+}
+
+.ox-card .content-left-button {
+  position: absolute;
+  font-size: 14px;
+  color: #cc524b;
+  height: 30px;
+  line-height: 30px;
+  width: 70px;
+  text-align: center;
+  border: 1px solid #cc524b;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.ox-card .lest-bt {
+  left: -80px;
+}
+
+.ox-card .next-bt {
+  right: -80px;
 }.ox-share .share {
   width: 100%;
   height: 100%;
 }
 
 .ox-share .bg {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
+  height: 48vw;
+  margin: 6vw auto;
+  display: block;
+  margin-top: 15vw;
+}
+
+.ox-share .share {
+  z-index: 0;
 }
 
 .ox-share .share-image {
@@ -656,45 +923,45 @@ p {
   width: 100%;
   height: 100%;
   display: none;
+  opacity: 0;
+  z-index: 2;
 }
 
 .ox-share .qr {
-  position: fixed;
-  bottom: 25%;
   align-items: center;
   width: 100%;
+  height: 90px;
+  margin: 15px 0;
 }
 
 .ox-share .qr img {
   margin: 0 auto;
   display: block;
-  width: 18%;
+  height: 100%;
   max-width: 220px;
 }
 
 .ox-share .learn-info {
-  position: fixed;
-  bottom: 36%;
-  width: 100px;
-  height: 100px;
-  background-color: #c62827;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  left: 0;
-  right: 0;
-  margin: auto;
+  background-color: #c62827;
+  position: relative;
+  margin: 0 auto;
 }
 
 .ox-share .learn-info .num {
-  position: absolute;
-  left: 0;
-  right: 15px;
-  top: 0;
-  bottom: 0;
-  margin: auto;
   color: white;
-  line-height: 100px;
   text-align: center;
-  font-size: 80px;
+  height: 50px;
+  line-height: 50px;
+  font-size: 40px;
+  width: 15vw;
+  top: 0px;
+  bottom: 0;
+  position: absolute;
+  margin: auto;
+  font-family: Arial;
 }
 
 .ox-share .learn-info .text {
@@ -705,6 +972,62 @@ p {
   right: 15px;
   bottom: 15px;
   color: white;
+}
+
+.ox-share .share-text {
+  width: 100%;
+  font-size: 12px;
+  text-align: center;
+  color: #a37f5a;
+  opacity: 0;
+  line-height: 30px;
+  -webkit-animation: fade 2s infinite;
+          animation: fade 2s infinite;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+}
+
+.ox-share .share-box-bottom {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 5% 0;
+}
+
+.ox-share .share-box-bottom .info-text {
+  text-align: center;
+  color: #cc524b;
+  line-height: 30px;
+  font-size: 14px;
+}
+
+.ox-share .share-box-bottom .logo-box img {
+  margin: 0 auto;
+  display: block;
+  height: 25px;
+  padding: 10px 0;
+}
+
+@keyframes fade {
+  from {
+    opacity: 1;
+  }
+
+  20% {
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+
+  80% {
+    opacity: 0.2;
+  }
+
+  to {
+    opacity: 1;
+  }
 }/* animation sets */
 
 /* move from / to  */
