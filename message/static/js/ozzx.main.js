@@ -39,17 +39,34 @@ function $dom(domName){return ozzx.domList[domName];}// 跳转到指定页面
 function $go(pageName,inAnimation,outAnimation,param){ozzx.state.animation={in:inAnimation,out:outAnimation};var paramString='';if(param&&_typeof(param)=='object'){paramString+='?';// 生成URL参数
 for(var paramKey in param){paramString+=paramKey+'='+param[paramKey]+'&';}// 去掉尾端的&
 paramString=paramString.slice(0,-1);}window.location.href=paramString+"#"+pageName;}// 页面资源加载完毕事件
-window.onload=function(){var page=ozzx.entry;window.ozzx.activePage=page;// 更改$data链接
-$data=ozzx.script[page].data;var entryDom=document.getElementById('ox-'+page);if(entryDom){runPageFunction(page,entryDom);}else{console.error('找不到页面入口!');}};window.ozzx={script:{"home":{"data":{},"created":function created(){var screen=ozzx.tool.getScreenInfo();if(screen.ratio<1){$dom('mainBox').classList.add('min');}$dom('mainBox').style.opacity=1;// 页面大小改变事件
+function ready(){var page=ozzx.entry;window.ozzx.activePage=page;// 更改$data链接
+$data=ozzx.script[page].data;var entryDom=document.getElementById('ox-'+page);if(entryDom){runPageFunction(page,entryDom);}else{console.error('找不到页面入口!');}}/*
+ * 传递函数给whenReady()
+ * 当文档解析完毕且为操作准备就绪时，函数作为document的方法调用
+ */var whenReady=function(){//这个函数返回whenReady()函数
+var funcs=[];//当获得事件时，要运行的函数
+var ready=false;//当触发事件处理程序时,切换为true
+//当文档就绪时,调用事件处理程序
+function handler(e){if(ready)return;//确保事件处理程序只完整运行一次
+//如果发生onreadystatechange事件，但其状态不是complete的话,那么文档尚未准备好
+if(e.type==='onreadystatechange'&&document.readyState!=='complete'){return;}//运行所有注册函数
+//注意每次都要计算funcs.length
+//以防这些函数的调用可能会导致注册更多的函数
+for(var i=0;i<funcs.length;i++){funcs[i].call(document);}//事件处理函数完整执行,切换ready状态, 并移除所有函数
+ready=true;funcs=null;}//为接收到的任何事件注册处理程序
+if(document.addEventListener){document.addEventListener('DOMContentLoaded',handler,false);document.addEventListener('readystatechange',handler,false);//IE9+
+window.addEventListener('load',handler,false);}else if(document.attachEvent){document.attachEvent('onreadystatechange',handler);window.attachEvent('onload',handler);}//返回whenReady()函数
+return function whenReady(fn){if(ready){fn.call(document);}else{funcs.push(fn);}};}();whenReady(ready);window.ozzx={script:{"home":{"data":{},"created":function created(){var screen=ozzx.tool.getScreenInfo();if(screen.ratio<1){$dom('mainBox').classList.add('min');}$dom('mainBox').style.opacity=1;// 页面大小改变事件
 window.onresize=function(){location.reload();};},"template":{"banner":{"created":function created(){var screen=ozzx.tool.getScreenInfo();console.log(screen.ratio);// 判断横屏还是竖屏
 if(screen.ratio>1){$dom('bannerBox').style.height=screen.clientWidth*0.459+'px';}else{$dom('bannerBox').classList.add('min');console.log(screen.clientWidth*1.05);$dom('bannerBox').style.height=screen.clientHeight+'px';}}},"tagCloud":{"created":function created(){var screenWidth=ozzx.tool.getScreenInfo().clientWidth;// 最大宽度800
 if(screenWidth>1000)screenWidth=800;document.getElementById('myCanvas').width=screenWidth;document.getElementById('myCanvas').height=screenWidth*0.6;document.getElementById('myCanvasContainer').style.height=screenWidth*0.6+'px';TagCanvas.Start('myCanvas','tags',{weight:true,fadeIn:1000,weightMode:'both',textColour:'#ff0000',frontSelect:true,outlineMethod:'none',textHeight:20,maxSpeed:0.05,minSpeed:0.005,wheelZoom:false,stretchX:1.8,dragControl:true,weightGradient:{0:'#a9a9a9',0.33:'#a78563',0.66:'#f17e50',1:'#f17e50'}});TagCanvas.SetSpeed('myCanvas',[-0.05,-0.05]);}},"messageBox":{"created":function created(){var html='';// 针对手机和PC分别进行处理
 var screen=ozzx.tool.getScreenInfo();if(screen.ratio>1){messageList.forEach(function(element){html+="\n            <div class=\"message-item\"><div class=\"message-box-title\">".concat(element.name,"</div><div class=\"message-box-text\">").concat(element.data,"</div></div>\n          ");});html+='<div class="clear"></div>';}else{messageList.forEach(function(element){html+="\n            <div class=\"left-item\">".concat(element.name,"</div>\n          ");});html+="\n          </div>\n          <div class=\"right-box\" id=\"messageBoxRightBox\">".concat(messageList[0].data,"</div>\n          <div class=\"clear\"></div>\n        ");var itemList=document.getElementsByClassName('left-item');setTimeout(function(){itemList[0].classList.add('active');},0);setTimeout(function(){var _loop=function _loop(ind){var element=itemList[ind];element.onclick=function(){for(var _ind=0;_ind<itemList.length;_ind++){var _element=itemList[_ind];_element.classList.remove('active');}this.classList.add('active');document.getElementById('messageBoxRightBox').innerHTML=messageList[ind].data;};};for(var ind=0;ind<itemList.length;ind++){_loop(ind);}},1000);}$dom('messageBox').innerHTML=html;},"activeItem":function activeItem(){console.log(this);}},"swiper":{"data":{"mySwiper":null},"created":function created(){var screen=ozzx.tool.getScreenInfo();if(screen.ratio<1){// 手机屏幕点击
 $dom('swiperContainer').style.height=screen.clientWidth*0.8+'px';$dom('swiperContainer').classList.add('min');this.data.mySwiper=new Swiper('.swiper-container',{autoplay:6000,loop:true,// 禁用鼠标点击
 simulateTouch:false,onlyExternal:true,slidesPerView:3,//其他设置
-tdFlow:{rotate:10,stretch:0,depth:100,modifier:1.4,shadows:true},onSlideClick:function onSlideClick(swiper){console.log(swiper.centerIndex,swiper);if(swiper.activeIndex==swiper.clickedSlideIndex-1){var url=swiper.clickedSlide.firstChild.src;document.getElementById('showBoxImage').src=url;document.getElementById('showBox').style.top='0';}}});}else{this.data.mySwiper=new Swiper('.swiper-container',{autoplay:3000,loop:true,// 禁用鼠标点击
+tdFlow:{rotate:10,stretch:0,depth:100,modifier:1.4,shadows:true},onSlideClick:function onSlideClick(swiper,e){// 排除掉标签
+if(e.target.classList[0]=='slide-text')return;if(swiper.activeIndex==swiper.clickedSlideIndex-1){var url=swiper.clickedSlide.firstChild.src;document.getElementById('showBoxImage').src=url;document.getElementById('showBox').style.top='0';}}});}else{this.data.mySwiper=new Swiper('.swiper-container',{autoplay:3000,loop:true,// 禁用鼠标点击
 simulateTouch:false,slidesPerView:3,//其他设置
-tdFlow:{rotate:10,stretch:80,depth:30,modifier:1,roundLengths:true},onSlideClick:function onSlideClick(swiper){// .getAttribute("src")
+tdFlow:{rotate:10,stretch:80,depth:30,modifier:1,roundLengths:true},onSlideClick:function onSlideClick(swiper){if(e.target.classList[0]=='slide-text')return;// .getAttribute("src")
 var url=swiper.clickedSlide.getAttribute("src");if(url){window.open(url);}}});}},"last":function last(){this.data.mySwiper.swipePrev();},"next":function next(){this.data.mySwiper.swipeNext();}},"footer":{"created":function created(){}},"showBox":{"created":function created(){},"close":function close(){document.getElementById('showBox').style.top='100%';}}}},"titleBar":{},"copyright":{}},tool:{},entry:"home",state:{}};// 便捷的获取工具方法
 var $tool=ozzx.tool;var $data={};function switchPage(oldUrlParam,newUrlParam){var oldPage=oldUrlParam.split('&')[0];var newPage=newUrlParam.split('&')[0];// 查找页面跳转前的page页(dom节点)
 // console.log(oldUrlParam)
