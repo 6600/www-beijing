@@ -65,7 +65,7 @@ body, html, .ox {
   width: 76%;
   left: 16%;
   font-weight: bold;
-  top: 75%;
+  top: 73%;
 }
 
 .ox-banner .text-box {
@@ -150,7 +150,7 @@ body, html, .ox {
 
 .ox-messageBox .right-box {
   width: calc(100% - 150px);
-  padding: 10px;
+  padding: 10px 0;
   height: 300px;
   position: absolute;
   top: 0;
