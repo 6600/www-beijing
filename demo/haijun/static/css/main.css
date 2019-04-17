@@ -1,0 +1,224 @@
+/* 这个文件里写的是全局样式,在各个页面都生效 */
+body, html, .ox {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  position: relative;
+	-webkit-overflow-scrolling: touch;
+	/* 计算不精确的原因，去掉底部会露出白边 */
+	background-color: black;
+}
+.img-list {
+  background: #3a2d25 url('../resource/jiaopian.svg') repeat-x;
+}
+
+.o-videoPlayer {
+  z-index: 99;
+}
+
+@keyframes blink {
+	0% {
+		opacity: 0;
+	}
+	50% {
+		opacity: 100;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+@-webkit-keyframes blink {
+	0% {
+		opacity: 0;
+	}
+	50% {
+		opacity: 100;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+/* 清除浮动 */
+.clear {
+  clear: both;
+}
+h1, h2, h3, h4, h5 {
+  margin: 0;
+  
+}
+a {
+  text-decoration: none;
+}
+.img-list, .o-plane {
+  float: left;
+}
+
+.hand-tip-layer {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background-color:rgba(0,0,0,.5);
+	z-index:150
+}
+.hand-tip-box {
+	position:absolute;
+	top:50%;
+	left:50%;
+	margin-left:-50px;
+	margin-top:-50px;
+	z-index:150;
+	width:100px;
+	height:100px;
+	-webkit-transform:rotate(90deg);
+	-ms-transform:rotate(90deg);
+	transform:rotate(90deg)
+}
+.hand-tip-box svg {
+	display:block
+}
+.st0 {
+	opacity:.7;
+	fill:none;
+	stroke:#a1091d;
+	stroke-width:7;
+	stroke-miterlimit:10
+}
+.st1 {
+	opacity:.51;
+	fill:none;
+	stroke:#a1091d;
+	stroke-width:7;
+	stroke-miterlimit:10
+}
+.st2 {
+	fill:#cfcfcf
+}
+.st3 {
+	fill:#a1091d
+}
+#out-circle {
+	opacity:0;
+	-webkit-animation:circleA 1s 1.6s infinite ease-in-out;
+	animation:circleA 1s 1.6s infinite ease-in-out
+}
+#in-circle {
+	opacity:0;
+	-webkit-animation:circleA 1s 1.35s infinite ease-in-out;
+	animation:circleA 1s 1.35s infinite ease-in-out
+}
+#hand {
+	-webkit-animation:handmove 1s 1s infinite ease-in-out;
+	animation:handmove 1s 1s infinite ease-in-out
+}
+.back-cover {
+	position:relative;
+	display:none;
+	width:100vw;
+	height:100vh;
+	color:#fff;
+	background-color:#000;
+	overflow:hidden;
+	opacity:0;
+	-webkit-transition:1s 5s ease;
+	transition:1s 5s ease
+}
+.show .back-cover {
+	display:block;
+	opacity:1
+}
+.back-quote {
+	-webkit-transform:rotate(90deg);
+	-ms-transform:rotate(90deg);
+	transform:rotate(90deg);
+	width:100vh;
+	text-align:center;
+	position:absolute;
+	top:40%;
+	left:-45%;
+	font-size:16px
+}
+@media screen and (min-height:740px) and (max-height:818px) {
+	.back-quote {
+	top:41%;
+	left:-60%
+}
+}.back-quote p {
+	margin-bottom:6px
+}
+.back-logo {
+	position:absolute;
+	top:47%;
+	left:60%;
+	width:150px;
+	-webkit-transform:rotate(90deg);
+	-ms-transform:rotate(90deg);
+	transform:rotate(90deg)
+}
+.names-box {
+	position:absolute;
+	top:46%;
+	left:-59%;
+	width:92vh;
+	-webkit-transform:rotate(90deg);
+	-ms-transform:rotate(90deg);
+	transform:rotate(90deg);
+	font-size:12px;
+	color:#aaa
+}
+@-webkit-keyframes circleA {
+	from {
+		opacity:0
+	}
+	to {
+		opacity:1
+}
+}
+@keyframes circleA {
+	from {
+		opacity:0
+	}
+	to {
+		opacity:1
+	}
+}
+@-webkit-keyframes handmove {
+	from {
+		-webkit-transform:translate(10px,10px);
+		transform:translate(10px,10px)
+	}
+	to {
+		-webkit-transform:translate(0,0);
+		transform:translate(0,0)
+	}
+}
+@keyframes handmove {
+	from {
+		-webkit-transform:translate(10px,10px);
+		transform:translate(10px,10px)
+	}
+	to {
+		-webkit-transform:translate(0,0);
+		transform:translate(0,0)
+	}
+}
+@-webkit-keyframes arrowtip {
+	to {
+		opacity:.5;
+		-webkit-transform:translateY(-6px);
+		transform:translateY(-6px)
+	}
+}
+@keyframes arrowtip{to{opacity:.5;-webkit-transform:translateY(-6px);transform:translateY(-6px)}} and (max-height: 818px){.back-quote{top: 41%;left: -60%;}}
+.hand-tip-svg{
+  width: 25%;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
