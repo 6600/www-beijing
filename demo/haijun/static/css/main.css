@@ -9,7 +9,7 @@ body, html, .ox {
 	background-color: black;
 }
 .img-list {
-  background: #3a2d25 url('../demo/haijun/resource/jiaopian.svg') repeat-x;
+  background: #3a2d25 url('../haijun/resource/jiaopian.svg') repeat-x;
 }
 
 .o-videoPlayer {
