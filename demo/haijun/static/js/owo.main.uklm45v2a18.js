@@ -1,3 +1,6 @@
+// build by owo frame!
+// Fri Apr 19 2019 08:25:32 GMT+0800 (GMT+08:00)
+
 "use strict";function _typeof(obj){if(typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"){_typeof=function _typeof(obj){return typeof obj;};}else{_typeof=function _typeof(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};}return _typeof(obj);}if(!owo){console.error('没有找到owo核心!');}// 注册owo默认变量
 // 框架状态变量
 owo.state={};// 框架全局变量
@@ -15,32 +18,41 @@ for(var key in newPageFunction.template){var templateScript=newPageFunction.temp
 // 待修复,临时获取方式,这种方式获取到的dom不准确
 var domList=entryDom.getElementsByClassName('o-'+key);if(domList.length!==1){console.error('我就说会有问题吧!');console.log(domList);}// 为模板注入运行环境
 templateScript.created.apply(_owo.assign(newPageFunction.template[key],{$el:domList[0].children[0],data:templateScript.data,activePage:window.owo.activePage}));}}};// owo-name处理
-_owo.pgNameHandler=function(tempDom){// 判断是否有点击事件
-var clickFunc=tempDom.attributes['@click'];if(clickFunc){tempDom.onclick=function(event){var clickFor=this.attributes['@click'].textContent;// 判断页面是否有自己的方法
+_owo.pgNameHandler=function(tempDom){var activePage=window.owo.script[owo.activePage];for(var ind=0;ind<tempDom.attributes.length;ind++){var attribute=tempDom.attributes[ind];// 判断是否为owo的事件
+if(attribute.name.startsWith('@')){var eventName=attribute.name.slice(1);var eventFor=attribute.textContent;switch(eventName){case'show':{// 初步先简单处理吧
+var temp=eventFor.replace(/ /g,'');// 取出条件
+var condition=temp.split("==");if(activePage.data[condition[0]]!=condition[1]){tempDom.style.display='none';}break;}default:{tempDom["on"+eventName]=function(event){// 因为后面会对eventFor进行修改所以使用拷贝的
+var eventForCopy=eventFor;// 判断页面是否有自己的方法
 var newPageFunction=window.owo.script[window.owo.activePage];// console.log(this.attributes)
 // 判断是否为模板
 var templateName=this.attributes['template'];if(templateName){// 如果模板注册到newPageFunction中，那么证明模板没有script那么直接使用eval执行
-if(newPageFunction.template){newPageFunction=newPageFunction.template[templateName.textContent];}else{eval(this.attributes['@click'].textContent);return;}}// 取出参数
-var parameterArr=[];var parameterList=clickFor.match(/[^\(\)]+(?=\))/g);if(parameterList&&parameterList.length>0){// 参数列表
+if(newPageFunction.template){newPageFunction=newPageFunction.template[templateName.textContent];}else{eval(eventForCopy);return;}}// 待优化可以单独提出来
+// 取出参数
+var parameterArr=[];var parameterList=eventForCopy.match(/[^\(\)]+(?=\))/g);if(parameterList&&parameterList.length>0){// 参数列表
 parameterArr=parameterList[0].split(',');// 进一步处理参数
 for(var i=0;i<parameterArr.length;i++){var parameterValue=parameterArr[i].replace(/(^\s*)|(\s*$)/g,"");// console.log(parameterValue)
 // 判断参数是否为一个字符串
 if(parameterValue.charAt(0)==='"'&&parameterValue.charAt(parameterValue.length-1)==='"'){parameterArr[i]=parameterValue.substring(1,parameterValue.length-1);}if(parameterValue.charAt(0)==="'"&&parameterValue.charAt(parameterValue.length-1)==="'"){parameterArr[i]=parameterValue.substring(1,parameterValue.length-1);}// console.log(parameterArr[i])
-}clickFor=clickFor.replace('('+parameterList+')','');}else{// 解决 @click="xxx()"会造成的问题
-clickFor=clickFor.replace('()','');}// console.log(newPageFunction)
+}eventForCopy=eventForCopy.replace('('+parameterList+')','');}else{// 解决 @click="xxx()"会造成的问题
+eventForCopy=eventForCopy.replace('()','');}// console.log(newPageFunction)
 // 如果有方法,则运行它
-if(newPageFunction[clickFor]){// 绑定window.owo对象
+if(newPageFunction[eventForCopy]){// 绑定window.owo对象
 // console.log(tempDom)
 // 待测试不知道这样合并会不会对其它地方造成影响
-newPageFunction.$el=this;newPageFunction.$event=event;newPageFunction[clickFor].apply(newPageFunction,parameterArr);}else{// 如果没有此方法则交给浏览器引擎尝试运行
-eval(this.attributes['@click'].textContent);}};}// 递归处理所有子Dom结点
+newPageFunction.$el=this;newPageFunction.$event=event;newPageFunction[eventForCopy].apply(newPageFunction,parameterArr);}else{// 如果没有此方法则交给浏览器引擎尝试运行
+eval(eventForCopy);}};}}}}// 递归处理所有子Dom结点
 for(var i=0;i<tempDom.children.length;i++){var childrenDom=tempDom.children[i];// console.log(childrenDom)
 _owo.pgNameHandler(childrenDom);}};// 便捷选择器
 if(!window.$){window.$=function(query){// 判断是否选择id
 if(query[0]=='#'){var dom=document.querySelector(query);return dom?dom:[];}else{var domList=document.querySelectorAll(query);return domList?domList:[];}};}// 跳转到指定页面
 function $go(pageName,inAnimation,outAnimation,param){owo.state.animation={in:inAnimation,out:outAnimation};var paramString='';if(param&&_typeof(param)=='object'){paramString+='?';// 生成URL参数
 for(var paramKey in param){paramString+=paramKey+'='+param[paramKey]+'&';}// 去掉尾端的&
-paramString=paramString.slice(0,-1);}window.location.href=paramString+"#"+pageName;}// 页面资源加载完毕事件
+paramString=paramString.slice(0,-1);}window.location.href=paramString+"#"+pageName;}function $change(key,value){// 更改对应的data
+owo.script[owo.activePage].data[key]=value;// 当前页面下@show元素列表
+var showList=document.getElementById('o-'+owo.activePage).querySelectorAll('[\\@show]');showList.forEach(function(element){// console.log(element)
+var order=element.attributes['@show'].textContent;// console.log(order)
+// 去掉空格
+order=order.replace(/ /g,'');if(order==key+'=='+value){element.style.display='';}else{element.style.display='none';}});}// 页面资源加载完毕事件
 function ready(){var page=owo.entry;window.owo.activePage=page;// 更改$data链接
 $data=owo.script[page].data;var entryDom=document.getElementById('o-'+page);if(entryDom){_owo.runPageFunction(page,entryDom);}else{console.error('找不到页面入口! 设置的入口为: '+page);}}/*
  * 传递函数给whenReady()

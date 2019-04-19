@@ -2,8 +2,17 @@
 <html lang="zh-CN">
 
 <head>
-  <title>页面</title>
+  <title>{TAG_14226_TAG}</title>
   <!-- 页面的元信息 -->
+  <meta name="keywords" content="{TAG_59446_TAG}" />
+  <meta name="description" content="{TAG_59447_TAG}" />
+  <meta name="catalogs" content="{TAG_83943_TAG}" />
+  <meta name="renderer" content="webkit">
+  <meta name="full-screen" content="yes">
+  <meta name="x5-fullscreen" content="true">
+  <meta name="browsermode" content="application">
+  <meta name="x5-page-mode" content="app">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1" />
   <!-- 页面主样式文件 -->
@@ -38,7 +47,8 @@
       text-align: center;
       align-items: center;
       opacity: 1;
-      transition: all 2s;
+      z-index: 99;
+      transition: all 1s;
       background-color: black;
     }
 
@@ -86,11 +96,69 @@
       z-index: 99;
     }
 
+    .o-videoPlayer .arrow-box {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 120;
+    }
+
+    .o-videoPlayer .arrow-box .arrow {
+      width: 20px;
+      position: absolute;
+      top: 16px;
+      bottom: 0;
+      margin: auto;
+      -webkit-animation: horizontal 0.8s linear 0s infinite alternate;
+      animation: horizontal 0.8s linear 0s infinite alternate;
+    }
+
+    .o-videoPlayer .arrow-box .arrow-text {
+      color: white;
+      position: absolute;
+      text-align: center;
+      right: 50px;
+      height: 20px;
+      line-height: 20px;
+      bottom: 0;
+      top: 16px;
+      margin: auto;
+      font-size: 12px;
+    }
+
+    @-webkit-keyframes horizontal {
+      0% {
+        right: 180px;
+        opacity: 1;
+      }
+
+      100% {
+        /* 运动最大距离为盒子长度减去球的长度 */
+        right: 190px;
+        opacity: 0.5;
+      }
+    }
+
+    @keyframes horizontal {
+      0% {
+        right: 180px;
+        opacity: 1;
+      }
+
+      100% {
+        /* 运动最大距离为盒子长度减去球的长度 */
+        right: 190px;
+        opacity: 0.5;
+      }
+    }
+
     .o-plane {
       width: 100%;
       height: 100%;
       position: relative;
-      background-image: url('./haijun/static/resource/plane-bg.jpg');
+      background-image: url('./static/resource/plane-bg.jpg');
       background-size: 100% 100%;
       overflow: hidden;
     }
@@ -98,8 +166,8 @@
     .o-plane .plane {
       height: 25%;
       position: absolute;
-      left: 10%;
-      top: 21%;
+      left: 1%;
+      top: 50%;
       transition: all 1s ease-in;
     }
 
@@ -197,7 +265,7 @@
       left: 0;
       top: 0;
       color: white;
-      display: none;
+      display: flex;
       justify-content: center;
       align-items: center;
       z-index: 9;
@@ -220,7 +288,7 @@
       right: 5px;
       width: 30px;
       height: 30px;
-      background-image: url('./haijun/static/resource/switch.png');
+      background-image: url('./static/resource/switch.png');
       background-size: 100%;
     }
 
@@ -239,7 +307,7 @@
     }
   </style>
   <!-- 附属css文件 -->
-  <link rel="stylesheet" href="./haijun/static/css/main.css">
+  <link rel="stylesheet" href="./static/css/main.css">
 
 </head>
 
@@ -248,129 +316,185 @@
   <div class="main-box o-home ox" id="o-home">
     <div class="video-box o-videoPlayer" id="videoBox">
       <div class="bg-box">
-        <img class="android-bg" src="./haijun/static/resource/click-bg.jpg" @click="play" ontouchmove="return false;" template="videoPlayer">
-      </div><video id="videoPlay" src="./haijun/static/resource/enter.mp4" preload="auto" autoplay="autoplay" webkit-playsinline="true" playsinline="true" x5-video-player-type="h5" x-webkit-airplay="true" x5-video-orientation="landscape" x5-video-player-fullscreen="true" ontouchstart="return false;"></video>
+        <img class="android-bg" src="./static/resource/click-bg.jpg" @click="play" ontouchmove="return false;" template="videoPlayer">
+      </div>
+      <video id="videoPlay" src="./static/resource/enter.mp4" preload="auto" autoplay="autoplay" webkit-playsinline="true" playsinline="true" x5-video-player-type="h5" x-webkit-airplay="true" x5-video-orientation="landscape" x5-video-player-fullscreen="true" ontouchstart="return false;"></video>
       <div class="text" id="text"></div>
+      <div class="arrow-box" @show="showArrowBox == true" @click="closeVideo" ontouchmove="return false;" template="videoPlayer">
+        <div class="arrow-text">左滑查看我的精彩瞬间</div>
+        <img class="arrow" src="./static/resource/arrow.png">
+      </div>
     </div>
     <div class="img-list" id="imgList">
-      <div class="img-list-box" @click="switchBlinker">
-        <div class="blinker">
-          <div class="text">1949年4月23日 人民海军成立</div>
+      <div class="img-list-box" @click="switchShow(0)">
+        <div class="blinker" @show="showBlinker == 0">
+          <div class="text">1949年4月23日 人民海军成立1949年4月23日 人民海军成立1949年4月23日 人民海军成立1949年4月23日 人民海军成立1949年4月23日 人民海军成立1949年4月23日 人民海军成立1949年4月23日 人民海军成立</div>
         </div>
         <div class="hand-tips" @click="hideTips"></div>
-        <img class="img-list-item" src="./haijun/static/resource/1.jpg" ondragstart="return false;"><!-- 图片右下角小图标-->
+        <img class="img-list-item" src="./static/resource/1.jpg" ondragstart="return false;"><!-- 图片右下角小图标-->
         <div class="switch-icon"></div><!-- 左下角角标-->
-        <div class="corner-marker"><span class="left">1</span><span class="division">/</span><span class="total">10</span></div>
+        <div class="corner-marker">
+          <span class="left">1</span>
+          <span class="division">/</span>
+          <span class="total">10</span>
+        </div>
       </div>
-      <div class="img-list-box" @click="switchBlinker">
-        <div class="blinker">
+      <div class="img-list-box" @click="switchShow(1)">
+        <div class="blinker" @show="showBlinker == 1">
           <div class="text">1970年12月26日 第一艘国产核潜艇成功下水</div>
         </div>
         <div class="hand-tips" @click="hideTips"></div>
-        <img class="img-list-item" src="./haijun/static/resource/2.jpg" ondragstart="return false;"><!-- 图片右下角小图标-->
+        <img class="img-list-item" src="./static/resource/2.jpg" ondragstart="return false;"><!-- 图片右下角小图标-->
         <div class="switch-icon"></div><!-- 左下角角标-->
-        <div class="corner-marker"><span class="left">1</span><span class="division">/</span><span class="total">10</span></div>
+        <div class="corner-marker">
+          <span class="left">1</span>
+          <span class="division">/</span>
+          <span class="total">10</span>
+        </div>
       </div>
-      <div class="img-list-box" @click="switchBlinker">
-        <div class="blinker">
+      <div class="img-list-box" @click="switchShow(2)">
+        <div class="blinker" @show="showBlinker == 2">
           <div class="text">1985年11月16日 海军军舰首次出访</div>
         </div>
         <div class="hand-tips" @click="hideTips"></div>
-        <img class="img-list-item" src="./haijun/static/resource/3.jpg" ondragstart="return false;"><!-- 图片右下角小图标-->
+        <img class="img-list-item" src="./static/resource/3.jpg" ondragstart="return false;"><!-- 图片右下角小图标-->
         <div class="switch-icon"></div><!-- 左下角角标-->
-        <div class="corner-marker"><span class="left">1</span><span class="division">/</span><span class="total">10</span></div>
+        <div class="corner-marker">
+          <span class="left">1</span>
+          <span class="division">/</span>
+          <span class="total">10</span>
+        </div>
       </div>
-      <div class="img-list-box" @click="switchBlinker">
-        <div class="blinker">
+      <div class="img-list-box" @click="switchShow(3)">
+        <div class="blinker" @show="showBlinker == 3">
           <div class="text">1988年9月27日 核潜艇水下发射运载火箭成功</div>
         </div>
         <div class="hand-tips" @click="hideTips"></div>
-        <img class="img-list-item" src="./haijun/static/resource/4.jpg" ondragstart="return false;"><!-- 图片右下角小图标-->
+        <img class="img-list-item" src="./static/resource/4.jpg" ondragstart="return false;"><!-- 图片右下角小图标-->
         <div class="switch-icon"></div><!-- 左下角角标-->
-        <div class="corner-marker"><span class="left">1</span><span class="division">/</span><span class="total">10</span></div>
+        <div class="corner-marker">
+          <span class="left">1</span>
+          <span class="division">/</span>
+          <span class="total">10</span>
+        </div>
       </div>
-      <div class="img-list-box" @click="switchBlinker">
-        <div class="blinker">
+      <div class="img-list-box" @click="switchShow(4)">
+        <div class="blinker" @show="showBlinker == 4">
           <div class="text">2002年9月23日 海军首次环球航行圆满结束</div>
         </div>
         <div class="hand-tips" @click="hideTips"></div>
-        <img class="img-list-item" src="./haijun/static/resource/5.jpg" ondragstart="return false;"><!-- 图片右下角小图标-->
+        <img class="img-list-item" src="./static/resource/5.jpg" ondragstart="return false;"><!-- 图片右下角小图标-->
         <div class="switch-icon"></div><!-- 左下角角标-->
-        <div class="corner-marker"><span class="left">1</span><span class="division">/</span><span class="total">10</span></div>
+        <div class="corner-marker">
+          <span class="left">1</span>
+          <span class="division">/</span>
+          <span class="total">10</span>
+        </div>
       </div>
-      <div class="img-list-box" @click="switchBlinker">
-        <div class="blinker">
+      <div class="img-list-box" @click="switchShow(5)">
+        <div class="blinker" @show="showBlinker == 5">
           <div class="text">2008年12月26日 海军首次亚丁湾护航</div>
         </div>
         <div class="hand-tips" @click="hideTips"></div>
-        <img class="img-list-item" src="./haijun/static/resource/6.jpg" ondragstart="return false;"><!-- 图片右下角小图标-->
+        <img class="img-list-item" src="./static/resource/6.jpg" ondragstart="return false;"><!-- 图片右下角小图标-->
         <div class="switch-icon"></div><!-- 左下角角标-->
-        <div class="corner-marker"><span class="left">1</span><span class="division">/</span><span class="total">10</span></div>
+        <div class="corner-marker">
+          <span class="left">1</span>
+          <span class="division">/</span>
+          <span class="total">10</span>
+        </div>
       </div>
-      <div class="img-list-box" @click="switchBlinker">
-        <div class="blinker">
+      <div class="img-list-box" @click="switchShow(6)">
+        <div class="blinker" @show="showBlinker == 6">
           <div class="text">2009年4月23日 中国首次举行多国海军活动</div>
         </div>
         <div class="hand-tips" @click="hideTips"></div>
-        <img class="img-list-item" src="./haijun/static/resource/7.jpg" ondragstart="return false;"><!-- 图片右下角小图标-->
+        <img class="img-list-item" src="./static/resource/7.jpg" ondragstart="return false;"><!-- 图片右下角小图标-->
         <div class="switch-icon"></div><!-- 左下角角标-->
-        <div class="corner-marker"><span class="left">1</span><span class="division">/</span><span class="total">10</span></div>
+        <div class="corner-marker">
+          <span class="left">1</span>
+          <span class="division">/</span>
+          <span class="total">10</span>
+        </div>
       </div>
-      <div class="img-list-box" @click="switchBlinker">
-        <div class="blinker">
+      <div class="img-list-box" @click="switchShow(7)">
+        <div class="blinker" @show="showBlinker == 7">
           <div class="text">2012年9月25日 中国首艘航空母舰辽宁舰入列</div>
         </div>
         <div class="hand-tips" @click="hideTips"></div>
-        <img class="img-list-item" src="./haijun/static/resource/8.png" ondragstart="return false;"><!-- 图片右下角小图标-->
+        <img class="img-list-item" src="./static/resource/8.jpg" ondragstart="return false;"><!-- 图片右下角小图标-->
         <div class="switch-icon"></div><!-- 左下角角标-->
-        <div class="corner-marker"><span class="left">1</span><span class="division">/</span><span class="total">10</span></div>
+        <div class="corner-marker">
+          <span class="left">1</span>
+          <span class="division">/</span>
+          <span class="total">10</span>
+        </div>
       </div>
-      <div class="img-list-box" @click="switchBlinker">
-        <div class="blinker">
+      <div class="img-list-box" @click="switchShow(8)">
+        <div class="blinker" @show="showBlinker == 8">
           <div class="text">2012年11月23日 舰载机首次着舰</div>
         </div>
         <div class="hand-tips" @click="hideTips"></div>
-        <img class="img-list-item" src="./haijun/static/resource/9.png" ondragstart="return false;"><!-- 图片右下角小图标-->
+        <img class="img-list-item" src="./static/resource/9.jpg" ondragstart="return false;"><!-- 图片右下角小图标-->
         <div class="switch-icon"></div><!-- 左下角角标-->
-        <div class="corner-marker"><span class="left">1</span><span class="division">/</span><span class="total">10</span></div>
+        <div class="corner-marker">
+          <span class="left">1</span>
+          <span class="division">/</span>
+          <span class="total">10</span>
+        </div>
       </div>
-      <div class="img-list-box" @click="switchBlinker">
-        <div class="blinker">
+      <div class="img-list-box" @click="switchShow(9)">
+        <div class="blinker" @show="showBlinker == 9">
           <div class="text">2015年3月29日 也门撤侨</div>
         </div>
         <div class="hand-tips" @click="hideTips"></div>
-        <img class="img-list-item" src="./haijun/static/resource/10.jpg" ondragstart="return false;"><!-- 图片右下角小图标-->
+        <img class="img-list-item" src="./static/resource/10.jpg" ondragstart="return false;"><!-- 图片右下角小图标-->
         <div class="switch-icon"></div><!-- 左下角角标-->
-        <div class="corner-marker"><span class="left">1</span><span class="division">/</span><span class="total">10</span></div>
+        <div class="corner-marker">
+          <span class="left">1</span>
+          <span class="division">/</span>
+          <span class="total">10</span>
+        </div>
       </div>
-      <div class="img-list-box" @click="switchBlinker">
-        <div class="blinker">
+      <div class="img-list-box" @click="switchShow(10)">
+        <div class="blinker" @show="showBlinker == 10">
           <div class="text">2017年4月26日 首艘国产航母下水</div>
         </div>
         <div class="hand-tips" @click="hideTips"></div>
-        <img class="img-list-item" src="./haijun/static/resource/11.png" ondragstart="return false;"><!-- 图片右下角小图标-->
+        <img class="img-list-item" src="./static/resource/11.jpg" ondragstart="return false;"><!-- 图片右下角小图标-->
         <div class="switch-icon"></div><!-- 左下角角标-->
-        <div class="corner-marker"><span class="left">1</span><span class="division">/</span><span class="total">10</span></div>
+        <div class="corner-marker">
+          <span class="left">1</span>
+          <span class="division">/</span>
+          <span class="total">10</span>
+        </div>
       </div>
-      <div class="img-list-box" @click="switchBlinker">
-        <div class="blinker">
+      <div class="img-list-box" @click="switchShow(11)">
+        <div class="blinker" @show="showBlinker == 11">
           <div class="text">2018年4月12日 中央军委在南海海域举行海上阅兵</div>
         </div>
         <div class="hand-tips" @click="hideTips"></div>
-        <img class="img-list-item" src="./haijun/static/resource/12.png" ondragstart="return false;"><!-- 图片右下角小图标-->
+        <img class="img-list-item" src="./static/resource/12.jpg" ondragstart="return false;"><!-- 图片右下角小图标-->
         <div class="switch-icon"></div><!-- 左下角角标-->
-        <div class="corner-marker"><span class="left">1</span><span class="division">/</span><span class="total">10</span></div>
+        <div class="corner-marker">
+          <span class="left">1</span>
+          <span class="division">/</span>
+          <span class="total">10</span>
+        </div>
       </div>
       <div class="clear"></div>
     </div>
     <div class="plane-box o-plane" id="planeBox">
-      <img class="plane" id="plane" src="./haijun/static/resource/plane.png">
-      <img class="people people-1" src="./haijun/static/resource/people.png" @click="flay" template="plane">
-      <img class="people people-2" src="./haijun/static/resource/people.png" @click="flay" template="plane">
-      <img class="hand" src="./haijun/static/resource/hand.png" @click="flay" template="plane">
-      <img class="congratulate" id="congratulate" src="./haijun/static/resource/congratulate.png"><!-- 烟花-->
-      <img class="fireworks" src="./haijun/static/resource/fireworks.gif">
-    </div>
+      <img class="plane" id="plane" src="./static/resource/plane.png">
+      <img class="people people-1" src="./static/resource/people.png" @click="flay" template="plane">
+      <img class="people people-2" src="./static/resource/people.png" @click="flay" template="plane">
+      <img class="hand" src="./static/resource/hand.png" @click="flay" template="plane">
+      <img class="congratulate" id="congratulate" src="./static/resource/congratulate.png"><!-- 烟花-->
+      <img class="fireworks" src="./static/resource/fireworks.gif"><!-- 起飞音乐-->
+      <audio id="flayAudio" src="./static/resource/flay.mp3" preload="auto"></audio>
+    </div><!-- 背景音乐-->
+    <audio id="bgAudio" src="./static/resource/bg.mp3" loop="loop"></audio><!-- 操作音频-->
+    <audio id="clickAudio" src="./static/resource/click.mp3" preload="auto"></audio>
     <div class="clear"></div>
   </div>
   <!-- owo框架代码 -->
@@ -382,45 +506,49 @@
       script: {
         "home": {
           "data": {
+            "showBlinker": "",
             "imgList": [{
-              "src": "./haijun/static/resource/1.jpg",
-              "text": "1949年4月23日 人民海军成立"
+              "src": "./static/resource/1.jpg",
+              "text": "1949年4月23日 人民海军成立1949年4月23日 人民海军成立1949年4月23日 人民海军成立1949年4月23日 人民海军成立1949年4月23日 人民海军成立1949年4月23日 人民海军成立1949年4月23日 人民海军成立"
             }, {
-              "src": "./haijun/static/resource/2.jpg",
+              "src": "./static/resource/2.jpg",
               "text": "1970年12月26日 第一艘国产核潜艇成功下水"
             }, {
-              "src": "./haijun/static/resource/3.jpg",
+              "src": "./static/resource/3.jpg",
               "text": "1985年11月16日 海军军舰首次出访"
             }, {
-              "src": "./haijun/static/resource/4.jpg",
+              "src": "./static/resource/4.jpg",
               "text": "1988年9月27日 核潜艇水下发射运载火箭成功"
             }, {
-              "src": "./haijun/static/resource/5.jpg",
+              "src": "./static/resource/5.jpg",
               "text": "2002年9月23日 海军首次环球航行圆满结束"
             }, {
-              "src": "./haijun/static/resource/6.jpg",
+              "src": "./static/resource/6.jpg",
               "text": "2008年12月26日 海军首次亚丁湾护航"
             }, {
-              "src": "./haijun/static/resource/7.jpg",
+              "src": "./static/resource/7.jpg",
               "text": "2009年4月23日 中国首次举行多国海军活动"
             }, {
-              "src": "./haijun/static/resource/8.png",
+              "src": "./static/resource/8.jpg",
               "text": "2012年9月25日 中国首艘航空母舰辽宁舰入列"
             }, {
-              "src": "./haijun/static/resource/9.png",
+              "src": "./static/resource/9.jpg",
               "text": "2012年11月23日 舰载机首次着舰"
             }, {
-              "src": "./haijun/static/resource/10.jpg",
+              "src": "./static/resource/10.jpg",
               "text": "2015年3月29日 也门撤侨"
             }, {
-              "src": "./haijun/static/resource/11.png",
+              "src": "./static/resource/11.jpg",
               "text": "2017年4月26日 首艘国产航母下水"
             }, {
-              "src": "./haijun/static/resource/12.png",
+              "src": "./static/resource/12.jpg",
               "text": "2018年4月12日 中央军委在南海海域举行海上阅兵"
             }]
           },
           "created": function created(params) {
+            var _this = this;
+
+            // $('body')[0].style.overflow = 'hidden'
             // var vConsole = new VConsole();
             // 填充角标
             var markerList = $('.corner-marker');
@@ -478,33 +606,47 @@
 
                   $('.hand-tips')[0].innerHTML = "<svg version=\"1.1\" class=\"hand-tip-svg\" id=\"hand-tip-svg\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox=\"0 0 180 137.8\" style=\"enable-background:new 0 0 180 137.8;\" xml:space=\"preserve\">\n                <circle id=\"out-circle\" class=\"st0\" cx=\"38.5\" cy=\"39.6\" r=\"33.4\"></circle>\n                <circle id=\"in-circle\" class=\"st1\" cx=\"38.5\" cy=\"39.6\" r=\"21.1\"></circle>\n                <path id=\"hand\" class=\"st2\" d=\"M102.8,109.8c-8.9-1.5-44.6-7.5-44.6-7.5c-3.9-0.7-6.6-4.2-6.3-8c0-0.3,0-0.5,0.1-0.8\n                c0.3-1.6,1-3,2.1-4.1c1.7-1.7,4.1-2.6,6.7-2.1l18.5,3.1l-0.9-0.9c-0.3-0.2-0.7-0.5-1-0.8l0,0L57,68.4L32.6,44c-3-3-3-7.8,0-10.8\n                c3-3,7.8-3,10.8,0l20.1,20.1l3.1-2.1c-1.9-3-1.6-7,1-9.6c3-3,7.8-3,10.8,0l1,1l2.9-1.9c-2.3-3-2.1-7.3,0.6-10.1\n                c2.9-2.9,7.5-3,10.5-0.3c0.4,0.3,0.7,0.6,1.1,0.9l0.7,0.7l3.6-2.4c-0.7-2.6-0.1-5.4,2-7.4c3-3,7.8-3,10.8,0l2,2\n                c0.5,0.3,14.4,14,14.4,14s0.7,0.8,1,1.2c0.1,0.1,0.2,0.3,0.3,0.4l14.7,14.7l0,0c2.6,2.6,4.4,5.6,5.6,8.8c0,0.1,0.1,0.1,0.1,0.2\n                c0,0,0,0.1,0,0.1c2.9,8.4,1,18-5.7,24.7l0,0l-16.5,16.5c-0.5,0.5-1,1-1.5,1.4C118.2,112.6,111.1,111.2,102.8,109.8z\"></path>\n                <g id=\"txt\">\n                  <path class=\"st3\" d=\"M29.3,133.8c-0.8,1.4-1.5,2.5-2.1,3.4l-1.1-0.8c0.7-0.9,1.4-2,2.1-3.2L29.3,133.8z M28.1,126.7H33v-4.9h1.3\n                  v1.9h7v1.1h-7v1.9h5.5v6h-1.3V132h-9.2v0.7h-1.3V126.7z M38.6,127.8h-9.2v3.1h9.2V127.8z M31.9,133.1c0.5,1.1,0.9,2.2,1.3,3.3\n                  l-1.3,0.4c-0.3-1.1-0.7-2.3-1.1-3.4L31.9,133.1z M35.6,133c0.5,1,1,2.1,1.4,3.2l-1.2,0.5c-0.3-0.9-0.7-2-1.3-3.3L35.6,133z\n                    M39.4,133.1c0.8,1.3,1.5,2.4,2,3.4l-1.2,0.6c-0.5-1.1-1.2-2.2-1.9-3.5L39.4,133.1z\"></path>\n                  <path class=\"st3\" d=\"M56.3,137.2v-0.7h-11v-5.3h1.3v4.1h4.1v-5.5h-7v-1.2h7v-2.8h-5.8v-1.2h5.8v-2.8h1.4v2.8H58v1.2h-5.9v2.8h7v1.2\n                  h-7v5.5h4.2v-4.1h1.3v6H56.3z\"></path>\n                  <path class=\"st3\" d=\"M61.8,123.5h6.7v-1.7h1.1v1.7h6.8v1h-5.8c1.6,1.3,3.7,2.2,6.2,2.8c-0.3,0.4-0.5,0.8-0.7,1.1\n                  c-0.6-0.2-1.1-0.4-1.6-0.6v6.8h-1.2V134h-8.4v0.7h-1.2V128c-0.5,0.2-1.1,0.5-1.7,0.7c-0.2-0.3-0.5-0.7-0.7-1\n                  c2.7-0.8,4.7-1.9,6.2-3.1h-5.6V123.5z M61.4,135.5h15.2v1.1H61.4V135.5z M68.5,127.5v-2.7c-1.2,1.2-2.7,2.2-4.6,3.1h10.6\n                  c-1.9-0.8-3.5-1.8-4.9-3v2.6H68.5z M73.3,129h-8.4v1.4h8.4V129z M64.9,132.9h8.4v-1.4h-8.4V132.9z\"></path>\n                  <path class=\"st3\" d=\"M79.1,127.2h4.8c0.3-0.4,0.5-0.8,0.7-1.3h-4.4v-1h4.9c0.2-0.4,0.3-0.8,0.5-1.2c-1.8,0.1-3.7,0.1-5.4,0.1\n                  c-0.1-0.3-0.1-0.7-0.2-1.1c5-0.1,9.3-0.2,13.1-0.5l0.2,1.1c-2.2,0.1-4.3,0.2-6.4,0.3c-0.1,0.4-0.3,0.9-0.5,1.3h6.8v1h-7.2\n                  c-0.2,0.4-0.4,0.9-0.7,1.3h9.1v1h-9.7c-0.3,0.4-0.5,0.8-0.8,1.2h8.6v7.8h-1.1v-0.6h-7.8v0.6h-1.1v-6.1c-0.8,0.9-1.7,1.7-2.7,2.5\n                  c-0.2-0.3-0.5-0.7-0.8-1.1c1.8-1.3,3.2-2.7,4.4-4.3h-4.1V127.2z M91.3,130.4h-7.8v1.1h7.8V130.4z M83.5,133.5h7.8v-1.1h-7.8V133.5z\n                    M83.5,135.6h7.8v-1.1h-7.8V135.6z\"></path>\n                  <path class=\"st3\" d=\"M97.3,122.5h13.8v14.7h-1.2v-0.8H98.5v0.8h-1.2V122.5z M109.9,123.6H98.5v11.7h11.4V123.6z M99,127.4\n                  c1.4-1,2.6-2.2,3.5-3.6l1,0.5c-0.2,0.3-0.4,0.6-0.6,0.8h5.5v0.9c-0.8,0.9-1.7,1.8-2.9,2.5c1.1,0.4,2.4,0.7,4,0.9\n                  c-0.2,0.5-0.4,0.9-0.5,1.2c-1.8-0.4-3.4-0.9-4.7-1.4c-1.3,0.6-3,1.1-5.1,1.7c-0.1-0.3-0.3-0.7-0.5-1c1.8-0.4,3.3-0.8,4.5-1.3\n                  c-0.7-0.5-1.4-1.1-1.9-1.7c-0.5,0.5-1,0.9-1.6,1.4C99.6,128,99.3,127.7,99,127.4z M100.2,133.5l0.3-1.1c2.6,0.3,5.1,0.7,7.5,1.2\n                  l-0.4,1.2C105.3,134.3,102.8,133.9,100.2,133.5z M101.8,131.4l0.3-1c1.5,0.2,3.1,0.5,4.8,0.8l-0.3,1.1\n                  C104.9,131.9,103.3,131.6,101.8,131.4z M106.9,126.1h-4.8c0,0,0,0,0,0.1c0.6,0.8,1.4,1.4,2.3,1.9\n                  C105.4,127.5,106.3,126.8,106.9,126.1z\"></path>\n                  <path class=\"st3\" d=\"M119.2,132.3c0,0.3,0.1,0.8,0.2,1.3c-0.8,0.6-1.6,1.3-2.4,1.9c-0.2,0.2-0.5,0.4-0.7,0.7l-0.9-1\n                  c0.3-0.3,0.5-0.8,0.5-1.4v-5.6h-1.8v-1.1h3v6.9C117.8,133.5,118.5,132.9,119.2,132.3z M115.9,122c0.8,0.8,1.6,1.6,2.4,2.6l-1.1,0.9\n                  c-0.9-1.1-1.6-2-2.3-2.7L115.9,122z M128.2,125v6.4H127v-0.6h-1.5v4.1c0,0.6,0.3,0.9,0.8,0.9h1.1c0.4,0,0.7-0.2,0.8-0.7\n                  c0.1-0.6,0.1-1.2,0.2-2.1c0.4,0.1,0.8,0.3,1.3,0.5c-0.1,0.7-0.2,1.4-0.3,2.1c-0.1,0.9-0.7,1.3-1.7,1.3h-1.5c-1.2,0-1.8-0.6-1.8-1.8\n                  v-4.3h-1.6c0,1.7-0.3,3-0.8,3.8c-0.6,1-1.7,1.9-3.3,2.6c-0.2-0.4-0.5-0.7-0.8-1.1c1.5-0.6,2.5-1.3,3-2.1c0.5-0.7,0.7-1.8,0.7-3.3\n                  h-1.1v0.6h-1.2V125h4.9c0.6-0.9,1.3-2,2-3.1l1.2,0.7c-0.7,0.9-1.3,1.8-1.8,2.4H128.2z M120,122.5l0.9-0.7c0.9,1,1.6,1.8,1.9,2.3\n                  l-1,0.7C121.2,124.1,120.6,123.3,120,122.5z M127,126.1h-6.6v3.6h6.6V126.1z\"></path>\n                </g>\n              </svg>";
                   $('.hand-tips')[0].style.display = 'block';
+                  setTimeout(function() {
+                    // 跳转到页面最顶端
+                    _this.setScrollTop(0);
+                  }, 100);
                 }, 0);
               }
             });
           },
-          "switchBlinker": function switchBlinker() {
-            var classList = this.$el.getElementsByClassName('blinker')[0].classList;
-
-            if (classList.contains('show')) {
-              classList.remove('show');
-            } else {
-              classList.add('show');
-            }
-          },
           "hideTips": function hideTips() {
+            // 播放点击声音
+            $('#clickAudio').play();
             this.$el.style.display = 'none';
+          },
+          "setScrollTop": function setScrollTop(scroll_top) {
+            document.documentElement.scrollTop = scroll_top;
+            window.pageYOffset = scroll_top;
+            document.body.scrollTop = scroll_top;
+          },
+          "switchShow": function switchShow(ind) {
+            // 播放点击声音
+            $('#clickAudio').play();
+
+            if (this.data.showBlinker == ind) {
+              $change('showBlinker', null);
+            } else {
+              $change('showBlinker', ind);
+            }
           },
           "template": {
             "videoPlayer": {
               "data": {
                 "isplay": false,
+                "playComplete": false,
                 "canPlay": false,
                 "weixinReady": false,
                 "isFullScreenPlay": false,
-                "imgArr": []
+                "imgArr": [],
+                "showArrowBox": false
               },
               "created": function created() {
-                var _this = this;
+                var _this2 = this;
 
                 // 判断是否为安卓手机，如果是安卓手机需要点击播放视频
                 var u = window.navigator.userAgent.toLowerCase();
@@ -513,7 +655,7 @@
                 var isIOS = /(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent); // 屏幕大小改变刷新页面
 
                 window.onresize = function() {
-                  if (!_this.data.isFullScreenPlay) {
+                  if (!_this2.data.isFullScreenPlay) {
                     window.location.reload();
                   }
                 }; // 视频播放器
@@ -540,24 +682,24 @@
                 this.changeScreenSize();
 
                 videoPlay.ontimeupdate = function(e) {
-                  if (e.target.currentTime > 18) {
-                    _this.playVideo();
+                  if (e.target.currentTime > 18.5) {
+                    _this2.playVideo();
                   }
                 }; // 方法
 
 
                 document.addEventListener('WeixinJSBridgeReady', function() {
-                  _this.data.weixinReady = true; // alert('微信准备就绪')
+                  _this2.data.weixinReady = true; // alert('微信准备就绪')
                   // alert(this.data.canPlay)
 
-                  if (_this.data.canPlay && _this.data.weixinReady) {
+                  if (_this2.data.canPlay && _this2.data.weixinReady) {
                     // alert('开始播放')
                     videoPlay.play();
                   }
                 }, false); // 加载文字图片
 
                 for (var i = 0; i < 42; i++) {
-                  this.data.imgArr.push("image/".concat(i, ".png"));
+                  this.data.imgArr.push("./static/resource/text/".concat(i, ".png"));
                 }
 
                 loadImages({
@@ -565,7 +707,7 @@
                 });
               },
               "play": function play() {
-                var _this2 = this;
+                var _this3 = this;
 
                 // 视频播放器
                 $('.bg-box')[0].style.top = '-100%';
@@ -576,7 +718,7 @@
 
                 videoPlay.addEventListener("x5videoenterfullscreen", function() {
                   // 标记状态
-                  _this2.data.isFullScreenPlay = true; // 确保android-bg已经进行隐藏
+                  _this3.data.isFullScreenPlay = true; // 确保android-bg已经进行隐藏
 
                   setTimeout(function() {
                     $('body')[0].style.transform = '';
@@ -611,12 +753,16 @@
                   $('#videoBox').innerHTML = '';
                   $('#videoBox').style.display = 'none';
                   setTimeout(function() {
-                    _this2.data.isFullScreenPlay = false;
+                    _this3.data.isFullScreenPlay = false;
                   }, 1000);
                 });
-                videoPlay.play();
+                setTimeout(function() {
+                  videoPlay.play();
+                }, 100);
               },
               "playVideo": function playVideo() {
+                var _this4 = this;
+
                 if (this.data.isplay) return;
                 this.data.isplay = true;
                 console.log('开始播放了');
@@ -629,16 +775,13 @@
                   useCanvas: true
                 });
                 framePlayer.play(0, 41, {
-                  "fps": 6,
+                  "fps": 25,
                   "useCanvas": true,
                   onComplete: function onComplete() {
-                    console.log("完成播放");
-                    $('#videoBox').style.opacity = 0; // 视频播放完毕等候1秒销毁视频
+                    console.log("完成播放"); // 标记为已完成播放
 
-                    setTimeout(function() {
-                      $('#videoBox').innerHTML = '';
-                      $('#videoBox').style.display = 'none';
-                    }, 2000);
+                    _this4.data.playComplete = true;
+                    $change('showArrowBox', true);
                   }
                 });
               },
@@ -673,9 +816,14 @@
                   body.style.height = screenInfo.clientWidth + 'px';
                   body.style.transform = 'translate3d(0, 0, 0) rotate(90deg)';
                   body.style.left = 'calc(50% - ' + screenInfo.clientHeight / 2 + 'px)';
-                  body.style.top = 'calc(50% - ' + screenInfo.clientWidth / 2 + 'px)'; // 判断以高度为基准还是以宽度为基准
+                  body.style.top = 'calc(50% - ' + screenInfo.clientWidth / 2 + 'px)';
+                  setTimeout(function() {
+                    body.style.opacity = '1';
+                  }, 0); // 判断以高度为基准还是以宽度为基准
 
-                  if (videoRatio > screenInfo.ratio) {
+                  console.log(videoRatio, $tool.getScreenInfo().ratio);
+
+                  if (videoRatio > $tool.getScreenInfo().ratio) {
                     console.log('以高度为基准!');
                     var videoWidth = ch * videoRatio;
                     videoPlay.style.height = ch + 'px';
@@ -690,9 +838,12 @@
                     videoPlay.style.top = -(videoHeight - ch) / 2 + 'px';
                   }
                 } else {
-                  // console.log(videoRatio, screenInfo.ratio)
+                  setTimeout(function() {
+                    body.style.opacity = '1';
+                  }, 0); // console.log(videoRatio, screenInfo.ratio)
                   // 判断以高度为基准还是以宽度为基准
-                  if (videoRatio > screenInfo.ratio) {
+
+                  if (videoRatio > $tool.getScreenInfo().ratio) {
                     console.log('以高度为基准!');
 
                     var _videoWidth = ch * videoRatio;
@@ -710,11 +861,25 @@
                     videoPlay.style.top = -(_videoHeight - ch) / 2 + 'px';
                   }
                 }
+              },
+              "closeVideo": function closeVideo() {
+                console.log('尝试隐藏视频播放');
+
+                if (this.data.playComplete) {
+                  $('#videoBox').style.opacity = 0; // 视频播放完毕等候1秒销毁视频
+
+                  setTimeout(function() {
+                    $('#videoBox').innerHTML = '';
+                    $('#videoBox').style.display = 'none'; // 进入相册播放背景音乐
+
+                    $('#bgAudio').play();
+                  }, 1000);
+                }
               }
             },
             "plane": {
               "data": {
-                "isFlay": true
+                "isFlay": false
               },
               "created": function created() {
                 // 屏幕信息
@@ -725,7 +890,9 @@
               "flay": function flay() {
                 // 已经飞走就不能点击了
                 if (!this.data.isFlay) {
-                  // 标记为已经飞走
+                  // 播放点击声音
+                  $('#flayAudio').play(); // 标记为已经飞走
+
                   this.data.isFlay = true; // 隐藏小手
 
                   $('.hand')[0].style.display = 'none'; // 更换航母style图片
@@ -737,7 +904,7 @@
                   try {
                     for (var _iterator2 = $('.people')[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
                       var item = _step2.value;
-                      item.src = './haijun/static/resource/people2.png';
+                      item.src = './static/resource/people2.png';
                     } // 飞机起飞
 
                   } catch (err) {
@@ -756,7 +923,7 @@
                   }
 
                   $('#plane').style.left = '100%';
-                  $('#plane').style.top = '2%';
+                  $('#plane').style.top = '48%';
                   setTimeout(function() {
                     $('#congratulate').style.opacity = 1;
                     $('.fireworks')[0].style.opacity = 1;
@@ -767,7 +934,7 @@
                     try {
                       for (var _iterator3 = $('.people')[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
                         var item = _step3.value;
-                        item.src = './haijun/static/resource/people.png';
+                        item.src = './static/resource/people.png';
                       }
                     } catch (err) {
                       _didIteratorError3 = true;
@@ -794,10 +961,10 @@
       entry: "home"
     };
   </script>
-  <script src="./haijun/static/js/gif.js" type="text/javascript"></script>
-  <script src="./haijun/static/js/vframeplayer.js" type="text/javascript"></script>
-  <!-- 主要script文件 -->
-  <script src="./haijun/static/js/owo.main.q8o3d1ack3.js" type="text/javascript"></script>
+  <script src="./static/js/gif.js" type="text/javascript"></script>
+  <script src="./static/js/vframeplayer.js" type="text/javascript"></script>
+  <!-- 框架script文件 -->
+  <script src="./static/js/owo.main.uklm45v2a18.js" type="text/javascript"></script>
 </body>
 
 </html>

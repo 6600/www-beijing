@@ -8,12 +8,11 @@ body, html, .ox {
 	/* 计算不精确的原因，去掉底部会露出白边 */
 	background-color: black;
 }
-.img-list {
-  background: #3a2d25 url('../haijun/resource/jiaopian.svg') repeat-x;
+body {
+	opacity: 0;
 }
-
-.o-videoPlayer {
-  z-index: 99;
+.img-list {
+  background: #3a2d25 url('../resource/jiaopian.svg') repeat-x;
 }
 
 @keyframes blink {
