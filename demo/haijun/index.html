@@ -320,7 +320,7 @@
       </div>
       <video id="videoPlay" src="./static/resource/enter.mp4" preload="auto" autoplay="autoplay" webkit-playsinline="true" playsinline="true" x5-video-player-type="h5" x-webkit-airplay="true" x5-video-orientation="landscape" x5-video-player-fullscreen="true" ontouchstart="return false;"></video>
       <div class="text" id="text"></div>
-      <div class="arrow-box" @show="showArrowBox == true" @click="closeVideo" ontouchmove="return false;" template="videoPlayer">
+      <div class="arrow-box" @show="showArrowBox == true" @touchmove="closeVideo" template="videoPlayer">
         <div class="arrow-text">左滑查看我的精彩瞬间</div>
         <img class="arrow" src="./static/resource/arrow.png">
       </div>
